@@ -189,6 +189,12 @@
     font-size:14px; font-weight:600; color:var(--blue-ink);
   }
   .ss-dot{ flex:none; width:9px; height:9px; border-radius:50%; background:var(--apricot); }
+  /* ===== Vimeo ショーケース埋め込み ===== */
+  .vimeo-wrap{
+    margin:0 16px 16px; border-radius:14px; overflow:hidden;
+    border:1px solid var(--line); box-shadow:var(--shadow-sm); background:#000;
+  }
+  .vimeo-wrap iframe{ display:block; width:100%; height:64vh; min-height:420px; border:0; }
   .tel-line{
     display:flex; align-items:center; justify-content:center; gap:7px;
     margin:10px 16px 0; padding:2px;
@@ -997,52 +1003,9 @@
       </button>
       <h2>動画コンテンツ</h2>
     </div>
-    <div class="chips-row">
-      <button class="fchip on">すべて</button>
-      <button class="fchip">はじめての方</button>
-      <button class="fchip">交換の基本</button>
-      <button class="fchip">入浴</button>
-      <button class="fchip">外出・旅行</button>
-      <button class="fchip">トラブル対処</button>
-    </div>
-    <div class="sect-head" style="margin-top:16px;"><h3>続きから見る</h3></div>
-    <a class="feature" href="#" style="margin:0 16px;">
-      <div class="thumb">
-        <span class="play"><svg width="18" height="18" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span>
-        <span class="dur">残り 1:20</span>
-      </div>
-      <div class="meta">
-        <span class="tag">交換の基本</span>
-        <b>はじめての装具交換</b>
-        <span>前回の続き（2:22〜）から再生します</span>
-      </div>
-    </a>
-    <div class="sect-head"><h3>はじめての方へ</h3><a href="#">すべて見る</a></div>
-    <div class="vgrid">
-      <a class="vcard" href="#">
-        <span class="vt"><span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span><span class="dur">3:42</span></span>
-        <b>はじめての装具交換</b>
-      </a>
-      <a class="vcard" href="#">
-        <span class="vt"><span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span><span class="dur">2:58</span></span>
-        <b>そろえておきたい道具たち</b>
-      </a>
-      <a class="vcard" href="#">
-        <span class="vt"><span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span><span class="dur">4:12</span></span>
-        <b>漏れを防ぐ貼り方の3つのコツ</b>
-      </a>
-      <a class="vcard" href="#">
-        <span class="vt"><span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span><span class="dur">3:31</span></span>
-        <b>お肌にやさしいはがし方</b>
-      </a>
-      <a class="vcard" href="#">
-        <span class="vt"><span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span><span class="dur">5:04</span></span>
-        <b>入浴・シャワーのポイント</b>
-      </a>
-      <a class="vcard" href="#">
-        <span class="vt"><span class="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="#16a6cc"><path d="M8 5v14l11-7z"/></svg></span><span class="dur">4:47</span></span>
-        <b>外出前のチェックリスト</b>
-      </a>
+    <p class="lead" style="margin:2px 16px 12px;">装具交換の基本から日々のケアまで、動画でわかりやすくご覧いただけます。</p>
+    <div class="vimeo-wrap">
+      <iframe src="https://vimeo.com/showcase/12327953/embed2" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" frameborder="0" title="ストサポ 動画一覧"></iframe>
     </div>
   </div>
 
