@@ -763,7 +763,7 @@
       <span class="d">種類と選び方がわかる</span>
     </a>
 
-    <a class="tile" href="#" onclick="openPage('page-soudan');return false;">
+    <a class="tile" href="#" onclick="openPage('page-chat');return false;">
       <span class="pic">
         <!-- 相談: ふきだし2つ -->
         <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1370,6 +1370,143 @@
       <div class="book-page"><img src="assets/book/p48.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 48ページ"></div>
     </div>
   </div>
+
+
+  <!-- ===== サブページ: AIチャット相談 ===== -->
+  <style>
+  #page-chat{ display:flex; flex-direction:column; padding-bottom:calc(74px + env(safe-area-inset-bottom,0)); background:var(--base); }
+  .chat-note{ flex:none; font-size:11px; color:#7c8a92; text-align:center; padding:6px 16px 2px; }
+  .chat-log{ flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 14px 8px; display:flex; flex-direction:column; gap:9px; }
+  .chat-log::-webkit-scrollbar{ width:0; }
+  .msg{ max-width:84%; padding:10px 13px; border-radius:16px; font-size:13.5px; line-height:1.72; word-break:break-word; }
+  .msg.bot{ align-self:flex-start; background:#fff; border:1px solid var(--line); color:#26333b; border-bottom-left-radius:5px; box-shadow:var(--shadow-sm); }
+  .msg.user{ align-self:flex-end; background:var(--teal-deep); color:#fff; border-bottom-right-radius:5px; }
+  .msg .actions{ margin-top:9px; display:flex; flex-wrap:wrap; gap:7px; }
+  .msg .act{ display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line); background:var(--sky); color:var(--teal-deep); border-radius:999px; padding:6px 11px; font-size:12px; font-weight:700; cursor:pointer; text-decoration:none; }
+  .msg .act.warm{ background:#fdeede; border-color:#f3dfc6; color:#b56a2a; }
+  .chat-chips{ flex:none; display:flex; gap:7px; padding:2px 14px 4px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .chat-chips::-webkit-scrollbar{ height:0; }
+  .chat-chip{ flex:none; border:1px solid var(--line); background:#fff; color:var(--teal-deep); border-radius:999px; padding:8px 13px; font-size:12.5px; font-weight:600; white-space:nowrap; cursor:pointer; }
+  .chat-inbar{ flex:none; display:flex; gap:9px; align-items:center; padding:9px 12px calc(9px + env(safe-area-inset-bottom,0)); border-top:1px solid var(--line); background:#fff; }
+  .chat-input{ flex:1; min-width:0; border:1px solid var(--line); border-radius:999px; padding:11px 15px; font-size:15px; outline:none; background:var(--base); color:#26333b; }
+  .chat-input:focus{ border-color:var(--teal); background:#fff; }
+  .chat-send{ flex:none; width:44px; height:44px; border-radius:50%; border:0; background:var(--apricot); color:#fff; display:grid; place-items:center; cursor:pointer; box-shadow:0 3px 8px rgba(226,146,78,.35); }
+  </style>
+  <div class="page" id="page-chat" aria-hidden="true">
+    <div class="page-head">
+      <button class="back" onclick="closePage('page-chat')" aria-label="ホームに戻る">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <h2>チャットで相談</h2>
+    </div>
+    <p class="chat-note">AIがよくある質問にお答えします。医療的な判断が必要なときは専任担当者・医療機関へご案内します。</p>
+    <div class="chat-log" id="chat-log"></div>
+    <div class="chat-chips" id="chat-chips"></div>
+    <div class="chat-inbar">
+      <input class="chat-input" id="chat-input" type="text" placeholder="気になることを入力…" autocomplete="off" onkeydown="if(event.key==='Enter'){chatSend();}">
+      <button class="chat-send" onclick="chatSend()" aria-label="送信">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+      </button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var KB = [{"q": "装具の交換間隔は？", "kw": ["交換", "間隔", "何日", "頻度", "いつ替", "タイミング", "替える"], "book": 17, "a": "皮膚保護剤（面板）が溶けると排泄物が皮膚に触れやすくなり、皮膚トラブルの原因になります。各メーカーの交換目安を参考にしつつ、面板の溶け幅（白くふやけた部分）が1cm程度になったところで定期的に交換しましょう。汗を多くかいた日は1日早めるのがおすすめです。"}, {"q": "面板のカットサイズは？", "kw": ["カット", "サイズ", "面板", "大きさ", "穴", "開孔"], "book": 19, "a": "ストーマの根もと（基部）のサイズより2〜3mm程度大きくカットするのが基本です。姿勢でサイズが変わる場合やむくんでいる時はこの限りではありません。"}, {"q": "装具を上手に貼るコツは？", "kw": ["貼る", "貼り方", "装着", "つけ方", "しわ", "貼れ"], "book": 17, "a": "背もたれのある椅子に浅く腰かけ、足をのばしてお腹を突き出すようにするとしわがのびて貼りやすくなります。面板を軽く折り曲げ、ストーマ下縁の2mm程度下に開孔部の縁を合わせてかぶせるように貼るのもコツです。"}, {"q": "ツーピースの袋は洗って使い回せる？", "kw": ["ツーピース", "袋", "洗って", "使い回", "使いまわ", "再利用"], "a": "おすすめしません。ストーマ袋はにおい分子を通しにくい素材ですが、一度使うと洗ってもにおい分子が表面に達し、におい漏れが生じます。面板と一緒に交換しましょう。"}, {"q": "装具はどこに保管すればいい？", "kw": ["保管", "保存", "収納", "ストック", "どこに置"], "a": "押し入れなど、温度・湿度の変化が少ない場所で保管しましょう。皮膚保護剤は温度や湿度で溶けたりひび割れたりします。買いだめしすぎず、給付券の時期に合わせて2〜3か月ごとを目安に注文するとよいです。"}, {"q": "使用済みの装具はどう捨てる？", "kw": ["捨てる", "廃棄", "ゴミ", "ごみ", "処分"], "a": "袋の中の排泄物はトイレに流し、装具は新聞紙やビニールで包んでから、お住まいの地域の分別に従って廃棄します。廃棄に関わる人のことも考えて処理しましょう。"}, {"q": "ストーマ周囲は洗ってもいい？", "kw": ["洗う", "洗浄", "洗い方", "石鹸", "せっけん", "清潔"], "book": 17, "a": "はい。泡立てた洗浄料でやさしくなでるように洗いましょう。タオルなどでゴシゴシこするのは避けてください。"}, {"q": "洗っても皮膚がベタベタする", "kw": ["ベタベタ", "べたべた", "粘着", "ねばねば", "べたつ"], "book": 20, "a": "よく洗った後に残るベタつきは溶けない粘着材で、排泄物や細菌はほとんど含みません。無理に取る必要はありませんが、気になる場合は粘着剝離剤（リムーバー）を使ってはがすのがおすすめです。"}, {"q": "皮膚を乾かすのにドライヤーは使える？", "kw": ["ドライヤー", "乾かす", "乾燥", "乾く"], "a": "ドライヤーは皮膚をいためるので使わず、タオルでやさしく押し拭きしましょう。排泄物がすぐ出ない状況なら、少し空気にさらしてから貼るのもよいです。"}, {"q": "貼っている部分に傷ができた", "kw": ["傷", "きず", "キズ"], "book": 20, "a": "面板を勢いよくはがすと角質層がいたみ、繰り返すと傷の原因になります。皮膚と面板の間を濡らして皮膚を押し下げながらゆっくりはがすか、粘着剝離剤（リムーバー）で丁寧にはがしましょう。毎日交換する方や皮膚が弱い方はリムーバーの使用がおすすめです。"}, {"q": "貼る部分の毛はどうすればいい？", "kw": ["毛", "ムダ毛", "体毛", "そる", "剃る", "毛嚢"], "a": "はがす時に毛が一緒に抜けると毛嚢炎を起こすことがあります。面板やテープを貼る部分の毛は短くしておきましょう（引き抜くのは避ける）。"}, {"q": "貼っている所だけ真っ赤・かゆい", "kw": ["赤い", "真っ赤", "かぶれ", "アレルギー", "かゆい", "かゆみ", "赤く"], "book": 20, "warn": true, "a": "テープや皮膚保護剤へのアレルギー反応が考えられます。赤いのが保護剤の部分かテープの部分かを確認し、テープの中止や保護剤の変更を検討します。赤みが強い場合は自己判断せず、ストーマ外来やかかりつけ医に相談してください。"}, {"q": "ストーマ周囲の軟膏の使い方", "kw": ["軟膏", "塗り薬", "ステロイド", "薬", "塗る"], "a": "軟膏は油分を含むため塗ってすぐは面板を貼れません。清潔にして軟膏を塗り、30分以上おいて吸収されたら、もう一度洗浄して油分を落としてから貼ります。可能ならローションタイプの外用薬を処方してもらうと便利です。"}, {"q": "皮膚がただれてしまった", "kw": ["ただれ", "びらん", "ジュクジュク", "じゅくじゅく", "皮膚障害", "荒れ"], "book": 20, "warn": true, "a": "便や尿が皮膚に触れると、消化酵素や細菌でダメージが加わります（特に水様便は要注意）。交換時にはがした装具を観察し、保護剤が1cm以上溶けていたら次回を1日早めましょう。改善しない・悪化する場合はストーマ外来へ相談してください。"}, {"q": "皮膚が黒ずんでいる", "kw": ["黒ずみ", "色素", "黒い", "くすみ"], "warn": true, "a": "色素沈着といい、皮膚トラブルが長期間続いた結果です。慢性の皮膚障害は急には治りません。ストーマ外来やかかりつけ医に相談しながら、原因を確認して根気よくケアしていくことが大切です。"}, {"q": "装具から漏れてしまう", "kw": ["漏れ", "もれ", "漏れる", "もれる"], "warn": true, "a": "漏れが続くのは、装具やケア方法が合っていないサインです。面板外周のテープはめくれ防止用で、漏れ自体は止められません。装具の種類やカット、貼り方の見直しが必要なので、ストーマ外来や専任担当者にご相談ください。"}, {"q": "装具が外れる・剥がれる", "kw": ["外れ", "剥がれ", "はがれ", "取れ", "脱落", "浮く"], "a": "しわやくぼみで面板が密着していない、皮膚保護剤が合っていない、などが原因のことが多いです。貼り方の工夫（お腹を突き出して貼る）や、凸面型装具・固定ベルトの併用が有効な場合があります。続く場合は担当者に相談を。"}, {"q": "はがす時に痛い", "kw": ["剥がす", "はがす", "痛い", "痛み", "リムーバー"], "a": "皮膚と面板の間を濡らして皮膚を押し下げながらゆっくりはがすか、粘着剝離剤（リムーバー）を使うと痛みが和らぎます。毎日交換する方や皮膚が弱い方はリムーバーの使用がおすすめです。"}, {"q": "お風呂・シャワーはどうする？", "kw": ["お風呂", "入浴", "風呂", "シャワー", "湯船", "バス"], "a": "装具をつけたまま入っても、外して入っても大丈夫です。排泄が落ち着く時間帯を選ぶと安心です。入浴用の小さな装具や防水テープを使う方法もあります。"}, {"q": "温泉・銭湯に入れる？", "kw": ["温泉", "銭湯", "公衆浴場", "大浴場", "旅館"], "a": "入れます。入浴用の小さな装具や、目立ちにくい肌色のカバーなどの工夫があります。最初は不安な方も多いですが、時間帯を選ぶなどで楽しんでいる方はたくさんいます。"}, {"q": "においが気になる", "kw": ["におい", "匂い", "ニオイ", "臭い", "くさい", "消臭"], "a": "防臭効果のある製品（消臭剤・フィルター付き装具など）が各種あります。においは食べ物でも変わり、にんにく・ねぎ・アスパラなどは強まりやすいです。実際にはにおっていないのに気になる、という方も多いので、心配なら担当者に相談を。"}, {"q": "ガス・おならが気になる", "kw": ["ガス", "おなら", "膨らむ", "空気", "張る"], "a": "炭酸飲料やいも類などはガスが増えやすい食品です。ガス抜きフィルター付きの装具を使うと袋がふくらみにくくなります。早食い・一気飲みを避けるのも有効です。"}, {"q": "食事に制限はある？", "kw": ["食事", "食べ物", "食べて", "飲酒", "お酒", "食生活", "食べられ"], "a": "基本的に食べてはいけないものはありません。ただし、においやガスを強める食品、下痢や便秘につながる食品には個人差があります。よく噛んで、水分を適度にとることが大切です。"}, {"q": "外出時のトイレはどうする？", "kw": ["外出", "トイレ", "オストメイト対応", "出かけ", "お出かけ"], "a": "駅・高速のサービスエリア・商業施設などに「オストメイト対応トイレ」が増えています（温水シャワーや汚物流し付き）。外出時は予備の装具とビニール袋を持っておくと安心です。"}, {"q": "旅行・出張はできる？", "kw": ["旅行", "旅", "飛行機", "出張", "泊まり"], "a": "できます。予備の装具は日数より多めに、手荷物にも分けて持ちましょう。飛行機は装具を機内持ち込み手荷物に入れておくと安心です。滞在先近くのオストメイト対応トイレを調べておくとより安心です。"}, {"q": "給付券（日常生活用具）の申請方法は？", "kw": ["給付券", "給付", "申請", "日常生活用具", "手続き", "手帳"], "book": 39, "a": "永久的なストーマで身体障害者手帳を取得すると、日常生活用具（ストーマ用品）の給付が受けられます。市区町村の窓口に手帳と印鑑を持参して申請書に記入し、販売業者の見積書を提出。後日、給付券が届き、装具と引き換えに提出して自己負担分を支払います。対象品目は自治体で異なるので窓口でご確認を。"}, {"q": "装具の費用・自己負担は？", "kw": ["費用", "値段", "負担", "いくら", "補助", "助成", "医療費控除", "お金"], "book": 39, "a": "給付制度を使うと自己負担は原則1割程度が目安です（自治体により上限額や所得制限あり）。給付券で足りない分や関連費用は、医療費控除の対象になる場合があります。詳しくは自治体窓口や担当者にご相談ください。"}, {"q": "仕事や運動は続けられる？", "kw": ["仕事", "職場", "運動", "スポーツ", "復帰", "働く"], "book": 27, "a": "多くの方が手術前とほぼ同じ生活に戻れます。重い物を持つ・強く腹圧をかける動作の前は、装具の固定を確認すると安心です。不安な動作は担当者に相談しながら少しずつ広げていきましょう。"}, {"q": "睡眠・寝るときの工夫", "kw": ["睡眠", "寝る", "就寝", "夜", "寝ている"], "book": 32, "a": "就寝前に袋を空にしておくと安心です。夜間に排泄が多い方は、大きめの袋やベッド用の工夫もあります。横向きなど楽な姿勢で休みましょう。"}, {"q": "ストーマを見るのがつらい・不安", "kw": ["不安", "こわい", "怖い", "見られない", "落ち込", "つらい", "気持ち", "受け入れ"], "a": "最初は戸惑ったり、見るのがつらいと感じる方はとても多いです。少しずつ慣れていくもので、あなただけではありません。同じ経験をした方の患者会や、専任担当者・ストーマ外来に気持ちを話すこともできます。ひとりで抱えないでください。"}, {"q": "どこに・何科に相談すればいい？", "kw": ["何科", "受診", "相談", "病院", "ストーマ外来", "どこに", "認定看護師"], "book": 43, "a": "ストーマのことは「ストーマ外来」や「皮膚・排泄ケア認定看護師」が専門です。装具や暮らしのことは、当サービスの専任担当者にも無料でご相談いただけます。緊急性が高いときは医療機関を受診してください。"}, {"q": "災害に備えて準備しておくものは？", "kw": ["災害", "地震", "防災", "備え", "非常", "停電"], "book": 37, "a": "装具を最低でも2週間分、できれば1か月分を防災バッグに分けて備えましょう。洗浄料・粘着剝離剤・ハサミ・ビニール袋・お薬手帳のコピーも一緒に。避難先で入手しにくいので、普段から少し多めのストックが安心です。"}];
+    var DANGER = ["出血", "血が出", "血が", "大量", "激しい痛", "強い痛み", "急な痛", "発熱", "熱が", "高熱", "息苦", "呼吸", "動かない", "戻らない", "飛び出", "脱出", "紫色", "黒く変色", "青黒", "冷たく", "救急", "意識", "ぐったり", "止まらない"];
+    var CHIPS = ["装具の交換間隔は？", "お風呂・温泉に入れる？", "においが気になる", "漏れてしまう", "給付券の申請方法", "担当者に相談したい"];
+    var TEL = '0334510480';
+
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function el(id){ return document.getElementById(id); }
+    function scrollDown(){ var l=el('chat-log'); if(l) l.scrollTop=l.scrollHeight; }
+
+    function addUser(text){
+      var l=el('chat-log'); if(!l) return;
+      var d=document.createElement('div'); d.className='msg user'; d.textContent=text; l.appendChild(d); scrollDown();
+    }
+    function addBot(html){
+      var l=el('chat-log'); if(!l) return;
+      var d=document.createElement('div'); d.className='msg bot'; d.innerHTML=html; l.appendChild(d); scrollDown();
+    }
+    function consultActions(){
+      return '<div class="actions">'
+        + '<a class="act warm" href="#" onclick="closePage(\'page-chat\');openPage(\'page-soudan\');return false;">専任担当者に相談（無料）</a>'
+        + '<a class="act" href="tel:'+TEL+'">電話する</a></div>';
+    }
+    function answerHtml(entry){
+      var h = esc(entry.a).replace(/\n/g,'<br>');
+      var acts = [];
+      if(entry.book){ acts.push('<a class="act" href="#" onclick="chatOpenBook('+entry.book+');return false;">サポートブック P'+entry.book+' を見る</a>'); }
+      acts.push('<a class="act warm" href="#" onclick="closePage(\'page-chat\');openPage(\'page-soudan\');return false;">担当者に相談</a>');
+      if(entry.warn){ h = h; }
+      h += '<div class="actions">'+acts.join('')+'</div>';
+      return h;
+    }
+    function norm(s){ return String(s||'').toLowerCase().replace(/\s+/g,''); }
+    function isDanger(t){ for(var i=0;i<DANGER.length;i++){ if(t.indexOf(DANGER[i])>=0) return true; } return false; }
+    function findEntry(t){
+      var best=null, bestScore=0;
+      for(var i=0;i<KB.length;i++){
+        var e=KB[i], s=0;
+        for(var k=0;k<e.kw.length;k++){ if(t.indexOf(norm(e.kw[k]))>=0) s+=2; }
+        if(t.indexOf(norm(e.q))>=0) s+=3;
+        if(s>bestScore){ bestScore=s; best=e; }
+      }
+      return bestScore>0 ? best : null;
+    }
+    function reply(text){
+      var t=norm(text);
+      if(/担当者|相談したい|人に相談|オペレータ|電話/.test(text)){
+        addBot('専任の担当者が無料でお答えします。下のボタンからどうぞ。'+consultActions());
+        return;
+      }
+      if(isDanger(text)){
+        addBot('その症状は、ここでの自己判断は避けてください。<b>早めに専任担当者（無料相談）または医療機関・ストーマ外来にご相談ください。</b>'+consultActions());
+        return;
+      }
+      var e=findEntry(t);
+      if(e){ addBot(answerHtml(e)); }
+      else {
+        addBot('うまくお答えできる情報が見つかりませんでした。よろしければ言葉を変えて聞いてみてください。専任の担当者が無料でお答えすることもできます。'+consultActions());
+      }
+    }
+
+    window.chatSend = function(){
+      var inp=el('chat-input'); if(!inp) return;
+      var v=(inp.value||'').trim(); if(!v) return;
+      inp.value='';
+      addUser(v);
+      setTimeout(function(){ reply(v); }, 120);
+    };
+    window.chatChip = function(text){
+      addUser(text);
+      setTimeout(function(){ reply(text); }, 120);
+    };
+    window.chatOpenBook = function(n){
+      closePage('page-chat');
+      openPage('page-book');
+      var t=document.getElementById('book-track');
+      if(t){ setTimeout(function(){ t.scrollLeft=(n-1)*(t.clientWidth||1); if(window.bookUpdate) bookUpdate(); }, 60); }
+    };
+
+    function renderChips(){
+      var c=el('chat-chips'); if(!c) return;
+      c.innerHTML='';
+      CHIPS.forEach(function(q){
+        var b=document.createElement('button'); b.className='chat-chip'; b.textContent=q;
+        b.onclick=function(){ chatChip(q); };
+        c.appendChild(b);
+      });
+    }
+    function init(){
+      if(!el('chat-log')) return;
+      addBot('こんにちは。ストーマのことなら、まずここで聞いてみてください。装具交換・皮膚・におい・お風呂・給付券など、気になることをどうぞ。下のボタンから選ぶこともできます。');
+      renderChips();
+    }
+    if(document.readyState!=='loading') init();
+    else document.addEventListener('DOMContentLoaded', init);
+  })();
+  </script>
 
   <nav class="tabbar" aria-label="下部ナビゲーション">
     <button class="tab active" onclick="goHome(this)">
