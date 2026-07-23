@@ -227,6 +227,15 @@
   .book-prev{ left:10px; }
   .book-next{ right:10px; }
   .book-nav:disabled{ opacity:.32; cursor:default; }
+  .book-page img{ touch-action:pan-x; will-change:transform; }
+  .book-hint{
+    position:absolute; left:50%; transform:translateX(-50%);
+    bottom:calc(74px + env(safe-area-inset-bottom,0)); z-index:12;
+    background:rgba(14,51,64,.8); color:#fff; font-size:11.5px; font-weight:600;
+    padding:5px 13px; border-radius:999px; pointer-events:none;
+    transition:opacity .5s ease;
+  }
+  .book-hint.hide{ opacity:0; }
   .tel-line{
     display:flex; align-items:center; justify-content:center; gap:7px;
     margin:10px 16px 0; padding:2px;
@@ -1303,6 +1312,7 @@
       <h2>サポートブック</h2>
     </div>
     <span class="book-count"><b id="book-cur">1</b> / 48</span>
+    <span class="book-hint" id="book-hint">ダブルタップ／ピンチで拡大</span>
     <button class="book-nav book-prev" id="book-prev" onclick="bookGo(-1)" aria-label="前のページ" disabled>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
     </button>
@@ -1310,54 +1320,54 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
     </button>
     <div class="book-track" id="book-track" onscroll="bookUpdate()">
-      <div class="book-page"><img src="assets/book/p01.jpg" loading="eager" width="1180" height="1670" alt="サポートブック 1ページ"></div>
-      <div class="book-page"><img src="assets/book/p02.jpg" loading="eager" width="1180" height="1670" alt="サポートブック 2ページ"></div>
-      <div class="book-page"><img src="assets/book/p03.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 3ページ"></div>
-      <div class="book-page"><img src="assets/book/p04.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 4ページ"></div>
-      <div class="book-page"><img src="assets/book/p05.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 5ページ"></div>
-      <div class="book-page"><img src="assets/book/p06.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 6ページ"></div>
-      <div class="book-page"><img src="assets/book/p07.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 7ページ"></div>
-      <div class="book-page"><img src="assets/book/p08.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 8ページ"></div>
-      <div class="book-page"><img src="assets/book/p09.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 9ページ"></div>
-      <div class="book-page"><img src="assets/book/p10.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 10ページ"></div>
-      <div class="book-page"><img src="assets/book/p11.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 11ページ"></div>
-      <div class="book-page"><img src="assets/book/p12.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 12ページ"></div>
-      <div class="book-page"><img src="assets/book/p13.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 13ページ"></div>
-      <div class="book-page"><img src="assets/book/p14.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 14ページ"></div>
-      <div class="book-page"><img src="assets/book/p15.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 15ページ"></div>
-      <div class="book-page"><img src="assets/book/p16.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 16ページ"></div>
-      <div class="book-page"><img src="assets/book/p17.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 17ページ"></div>
-      <div class="book-page"><img src="assets/book/p18.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 18ページ"></div>
-      <div class="book-page"><img src="assets/book/p19.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 19ページ"></div>
-      <div class="book-page"><img src="assets/book/p20.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 20ページ"></div>
-      <div class="book-page"><img src="assets/book/p21.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 21ページ"></div>
-      <div class="book-page"><img src="assets/book/p22.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 22ページ"></div>
-      <div class="book-page"><img src="assets/book/p23.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 23ページ"></div>
-      <div class="book-page"><img src="assets/book/p24.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 24ページ"></div>
-      <div class="book-page"><img src="assets/book/p25.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 25ページ"></div>
-      <div class="book-page"><img src="assets/book/p26.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 26ページ"></div>
-      <div class="book-page"><img src="assets/book/p27.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 27ページ"></div>
-      <div class="book-page"><img src="assets/book/p28.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 28ページ"></div>
-      <div class="book-page"><img src="assets/book/p29.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 29ページ"></div>
-      <div class="book-page"><img src="assets/book/p30.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 30ページ"></div>
-      <div class="book-page"><img src="assets/book/p31.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 31ページ"></div>
-      <div class="book-page"><img src="assets/book/p32.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 32ページ"></div>
-      <div class="book-page"><img src="assets/book/p33.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 33ページ"></div>
-      <div class="book-page"><img src="assets/book/p34.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 34ページ"></div>
-      <div class="book-page"><img src="assets/book/p35.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 35ページ"></div>
-      <div class="book-page"><img src="assets/book/p36.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 36ページ"></div>
-      <div class="book-page"><img src="assets/book/p37.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 37ページ"></div>
-      <div class="book-page"><img src="assets/book/p38.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 38ページ"></div>
-      <div class="book-page"><img src="assets/book/p39.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 39ページ"></div>
-      <div class="book-page"><img src="assets/book/p40.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 40ページ"></div>
-      <div class="book-page"><img src="assets/book/p41.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 41ページ"></div>
-      <div class="book-page"><img src="assets/book/p42.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 42ページ"></div>
-      <div class="book-page"><img src="assets/book/p43.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 43ページ"></div>
-      <div class="book-page"><img src="assets/book/p44.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 44ページ"></div>
-      <div class="book-page"><img src="assets/book/p45.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 45ページ"></div>
-      <div class="book-page"><img src="assets/book/p46.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 46ページ"></div>
-      <div class="book-page"><img src="assets/book/p47.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 47ページ"></div>
-      <div class="book-page"><img src="assets/book/p48.jpg" loading="lazy" width="1180" height="1670" alt="サポートブック 48ページ"></div>
+      <div class="book-page"><img src="assets/book/p01.jpg" loading="eager" width="1500" height="2122" alt="サポートブック 1ページ"></div>
+      <div class="book-page"><img src="assets/book/p02.jpg" loading="eager" width="1500" height="2122" alt="サポートブック 2ページ"></div>
+      <div class="book-page"><img src="assets/book/p03.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 3ページ"></div>
+      <div class="book-page"><img src="assets/book/p04.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 4ページ"></div>
+      <div class="book-page"><img src="assets/book/p05.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 5ページ"></div>
+      <div class="book-page"><img src="assets/book/p06.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 6ページ"></div>
+      <div class="book-page"><img src="assets/book/p07.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 7ページ"></div>
+      <div class="book-page"><img src="assets/book/p08.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 8ページ"></div>
+      <div class="book-page"><img src="assets/book/p09.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 9ページ"></div>
+      <div class="book-page"><img src="assets/book/p10.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 10ページ"></div>
+      <div class="book-page"><img src="assets/book/p11.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 11ページ"></div>
+      <div class="book-page"><img src="assets/book/p12.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 12ページ"></div>
+      <div class="book-page"><img src="assets/book/p13.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 13ページ"></div>
+      <div class="book-page"><img src="assets/book/p14.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 14ページ"></div>
+      <div class="book-page"><img src="assets/book/p15.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 15ページ"></div>
+      <div class="book-page"><img src="assets/book/p16.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 16ページ"></div>
+      <div class="book-page"><img src="assets/book/p17.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 17ページ"></div>
+      <div class="book-page"><img src="assets/book/p18.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 18ページ"></div>
+      <div class="book-page"><img src="assets/book/p19.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 19ページ"></div>
+      <div class="book-page"><img src="assets/book/p20.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 20ページ"></div>
+      <div class="book-page"><img src="assets/book/p21.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 21ページ"></div>
+      <div class="book-page"><img src="assets/book/p22.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 22ページ"></div>
+      <div class="book-page"><img src="assets/book/p23.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 23ページ"></div>
+      <div class="book-page"><img src="assets/book/p24.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 24ページ"></div>
+      <div class="book-page"><img src="assets/book/p25.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 25ページ"></div>
+      <div class="book-page"><img src="assets/book/p26.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 26ページ"></div>
+      <div class="book-page"><img src="assets/book/p27.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 27ページ"></div>
+      <div class="book-page"><img src="assets/book/p28.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 28ページ"></div>
+      <div class="book-page"><img src="assets/book/p29.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 29ページ"></div>
+      <div class="book-page"><img src="assets/book/p30.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 30ページ"></div>
+      <div class="book-page"><img src="assets/book/p31.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 31ページ"></div>
+      <div class="book-page"><img src="assets/book/p32.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 32ページ"></div>
+      <div class="book-page"><img src="assets/book/p33.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 33ページ"></div>
+      <div class="book-page"><img src="assets/book/p34.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 34ページ"></div>
+      <div class="book-page"><img src="assets/book/p35.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 35ページ"></div>
+      <div class="book-page"><img src="assets/book/p36.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 36ページ"></div>
+      <div class="book-page"><img src="assets/book/p37.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 37ページ"></div>
+      <div class="book-page"><img src="assets/book/p38.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 38ページ"></div>
+      <div class="book-page"><img src="assets/book/p39.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 39ページ"></div>
+      <div class="book-page"><img src="assets/book/p40.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 40ページ"></div>
+      <div class="book-page"><img src="assets/book/p41.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 41ページ"></div>
+      <div class="book-page"><img src="assets/book/p42.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 42ページ"></div>
+      <div class="book-page"><img src="assets/book/p43.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 43ページ"></div>
+      <div class="book-page"><img src="assets/book/p44.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 44ページ"></div>
+      <div class="book-page"><img src="assets/book/p45.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 45ページ"></div>
+      <div class="book-page"><img src="assets/book/p46.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 46ページ"></div>
+      <div class="book-page"><img src="assets/book/p47.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 47ページ"></div>
+      <div class="book-page"><img src="assets/book/p48.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 48ページ"></div>
     </div>
   </div>
 
@@ -1459,6 +1469,7 @@
   }
 
   /* ===== デジタルブック 操作 ===== */
+  var __bookLastIdx = -1;
   function bookUpdate(){
     var track = document.getElementById('book-track');
     if(!track) return;
@@ -1467,6 +1478,10 @@
     var idx = Math.round(track.scrollLeft / w);
     if(idx < 0) idx = 0;
     if(idx > total - 1) idx = total - 1;
+    if(idx !== __bookLastIdx){
+      __bookLastIdx = idx;
+      if(window.__bookResetZoom) window.__bookResetZoom();
+    }
     var cur = document.getElementById('book-cur');
     if(cur) cur.textContent = (idx + 1);
     var prev = document.getElementById('book-prev');
@@ -1479,6 +1494,110 @@
     if(!track) return;
     track.scrollBy({ left: dir * (track.clientWidth || 1), behavior: 'smooth' });
   }
+
+  /* ===== デジタルブック ズーム（ダブルタップ／ピンチ／ドラッグ） ===== */
+  (function(){
+    var MAXS = 4, DBL = 2.6;
+    var track = null, img = null, scale = 1, tx = 0, ty = 0;
+    var pinching = false, pinchDist = 0, pinchScale = 1, pinchMX = 0, pinchMY = 0, pinchTx = 0, pinchTy = 0;
+    var panning = false, panX = 0, panY = 0, panTx = 0, panTy = 0;
+    var lastTap = 0, lastTapX = 0, lastTapY = 0, hintTimer = null;
+
+    function init(){
+      track = document.getElementById('book-track');
+      if(!track) return;
+      track.addEventListener('touchstart', onStart, { passive:false });
+      track.addEventListener('touchmove', onMove, { passive:false });
+      track.addEventListener('touchend', onEnd, { passive:false });
+      track.addEventListener('dblclick', function(e){
+        e.preventDefault(); var im = current();
+        if(im) toggleAt(im, e.clientX, e.clientY);
+      });
+    }
+    function current(){
+      if(!track) return null;
+      var w = track.clientWidth || 1, idx = Math.round(track.scrollLeft / w);
+      var cell = track.children[idx];
+      return cell ? cell.querySelector('img') : null;
+    }
+    function use(im){ if(img && img !== im) reset(); img = im; if(img) img.style.transformOrigin = 'center center'; }
+    function apply(anim){
+      if(!img) return;
+      img.style.transition = anim ? 'transform .18s ease' : 'none';
+      img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+      var zoomed = scale > 1.01;
+      track.style.overflowX = zoomed ? 'hidden' : 'auto';
+      track.style.touchAction = zoomed ? 'none' : 'pan-x';
+      img.style.touchAction = zoomed ? 'none' : 'pan-x';
+    }
+    function reset(){
+      if(img){ img.style.transition = 'transform .18s ease'; img.style.transform = ''; img.style.touchAction = 'pan-x'; }
+      img = null; scale = 1; tx = 0; ty = 0;
+      if(track){ track.style.overflowX = 'auto'; track.style.touchAction = 'pan-x'; }
+    }
+    window.__bookResetZoom = reset;
+    function clamp(){
+      if(!img) return;
+      var bw = img.clientWidth, bh = img.clientHeight;
+      var mx = (scale - 1) * bw / 2, my = (scale - 1) * bh / 2;
+      if(tx > mx) tx = mx; if(tx < -mx) tx = -mx;
+      if(ty > my) ty = my; if(ty < -my) ty = -my;
+    }
+    function hideHint(){
+      var h = document.getElementById('book-hint');
+      if(h) h.classList.add('hide');
+    }
+    function toggleAt(im, cx, cy){
+      hideHint(); use(im);
+      if(scale > 1.01){ scale = 1; tx = 0; ty = 0; apply(true); return; }
+      var r = im.getBoundingClientRect();
+      var dx = cx - (r.left + r.width / 2), dy = cy - (r.top + r.height / 2);
+      scale = DBL; tx = -dx * (DBL - 1); ty = -dy * (DBL - 1);
+      clamp(); apply(true);
+    }
+    function dist(t){ return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+    function onStart(e){
+      if(e.touches.length === 2){
+        var im = current(); if(!im) return;
+        use(im); pinching = true; hideHint();
+        pinchDist = dist(e.touches); pinchScale = scale;
+        pinchMX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        pinchMY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        pinchTx = tx; pinchTy = ty; e.preventDefault();
+      } else if(e.touches.length === 1){
+        var t = e.touches[0], now = Date.now();
+        if(now - lastTap < 300 && Math.abs(t.clientX - lastTapX) < 30 && Math.abs(t.clientY - lastTapY) < 30){
+          var im2 = current(); if(im2) toggleAt(im2, t.clientX, t.clientY);
+          lastTap = 0; e.preventDefault(); return;
+        }
+        lastTap = now; lastTapX = t.clientX; lastTapY = t.clientY;
+        if(scale > 1.01){ panning = true; panX = t.clientX; panY = t.clientY; panTx = tx; panTy = ty; e.preventDefault(); }
+      }
+    }
+    function onMove(e){
+      if(pinching && e.touches.length === 2){
+        var d = dist(e.touches);
+        scale = Math.min(MAXS, Math.max(1, pinchScale * d / (pinchDist || 1)));
+        var mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        var my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        tx = pinchTx + (mx - pinchMX); ty = pinchTy + (my - pinchMY);
+        clamp(); apply(false); e.preventDefault();
+      } else if(panning && e.touches.length === 1){
+        var t = e.touches[0];
+        tx = panTx + (t.clientX - panX); ty = panTy + (t.clientY - panY);
+        clamp(); apply(false); e.preventDefault();
+      }
+    }
+    function onEnd(e){
+      if(pinching && e.touches.length < 2){
+        pinching = false;
+        if(scale <= 1.02){ scale = 1; tx = 0; ty = 0; apply(true); }
+      }
+      if(panning && e.touches.length === 0) panning = false;
+    }
+    if(document.readyState !== 'loading') init();
+    else document.addEventListener('DOMContentLoaded', init);
+  })();
 
 </script>
 </body>
