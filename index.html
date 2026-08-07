@@ -800,7 +800,7 @@
       <span class="d">困りごとから答えを探す</span>
     </a>
 
-    <a class="tile" href="#" onclick="return false;">
+    <a class="tile" href="#" onclick="openPage('page-fukushi');return false;">
       <span class="pic">
         <!-- 福祉: 手のひらにハート -->
         <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -810,7 +810,7 @@
           <path d="M52 9 C55 11 56 15 52 18 C48 15 49 11 52 9Z" fill="#f2a869"/>
         </svg>
       </span>
-      <span class="t">福祉について</span>
+      <span class="t">福祉制度について</span>
       <span class="d">給付制度・助成のこと</span>
     </a>
 
@@ -1446,6 +1446,31 @@
   })();
   </script>
 
+  <!-- ===== サブページ: 福祉制度について（PDF電子ブック） ===== -->
+  <style>#page-fukushi{ display:flex; flex-direction:column; padding-bottom:calc(64px + env(safe-area-inset-bottom,0)); background:#e9edf0; }</style>
+  <div class="page" id="page-fukushi" aria-hidden="true">
+    <div class="page-head">
+      <button class="back" onclick="closePage('page-fukushi')" aria-label="ホームに戻る">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <h2>福祉制度について</h2>
+    </div>
+    <span class="book-count"><b id="book-cur">1</b> / 4</span>
+    <span class="book-hint" id="book-hint">ダブルタップ／ピンチで拡大</span>
+    <button class="book-nav book-prev" id="book-prev" onclick="bookGo(-1)" aria-label="前のページ" disabled>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <button class="book-nav book-next" id="book-next" onclick="bookGo(1)" aria-label="次のページ">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+    <div class="book-track" id="book-track" onscroll="bookUpdate()">
+      <div class="book-page"><img src="assets/fukushi/p01.jpg" loading="eager" width="1500" height="2122" alt="福祉制度案内 1ページ"></div>
+      <div class="book-page"><img src="assets/fukushi/p02.jpg" loading="eager" width="1500" height="2122" alt="福祉制度案内 2ページ"></div>
+      <div class="book-page"><img src="assets/fukushi/p03.jpg" loading="lazy" width="1500" height="2122" alt="福祉制度案内 3ページ"></div>
+      <div class="book-page"><img src="assets/fukushi/p04.jpg" loading="lazy" width="1500" height="2122" alt="福祉制度案内 4ページ"></div>
+    </div>
+  </div>
+
   <nav class="tabbar" aria-label="下部ナビゲーション">
     <button class="tab active" onclick="goHome(this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg>
@@ -1510,7 +1535,7 @@
     el.classList.add('open');
     el.setAttribute('aria-hidden','false');
     el.scrollTop = 0;
-    if(id === 'page-book'){
+    if(id === 'page-fukushi'){
       var t = document.getElementById('book-track');
       if(t){ t.scrollLeft = 0; }
       bookUpdate();
