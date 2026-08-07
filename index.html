@@ -196,6 +196,9 @@
     margin:0; overflow:hidden; background:#000;
   }
   #page-video .vimeo-wrap iframe{ display:block; width:100%; height:100%; min-height:360px; border:0; }
+  .vtabs{ flex:none; display:flex; gap:8px; padding:10px 14px 9px; background:#fff; border-bottom:1px solid var(--line); }
+  .vtab{ flex:1; padding:9px 6px; border:1px solid var(--line); background:var(--base); color:#6b8088; border-radius:999px; font-size:13.5px; font-weight:700; cursor:pointer; }
+  .vtab.on{ background:var(--teal-deep); color:#fff; border-color:var(--teal-deep); }
   /* ===== デジタルブック（サポートブック） ===== */
   #page-book{ display:flex; flex-direction:column; padding-bottom:calc(64px + env(safe-area-inset-bottom,0)); background:#e9edf0; }
   .book-track{
@@ -1044,8 +1047,12 @@
       </button>
       <h2>動画コンテンツ</h2>
     </div>
+    <div class="vtabs">
+      <button class="vtab on" id="vtab-in" onclick="switchVideo('12357145')">入院中に観る</button>
+      <button class="vtab" id="vtab-out" onclick="switchVideo('12356161')">退院後に観る</button>
+    </div>
     <div class="vimeo-wrap">
-      <iframe src="https://vimeo.com/showcase/12357145/embed2" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" allowfullscreen webkitallowfullscreen mozallowfullscreen frameborder="0" title="ストサポ 動画一覧"></iframe>
+      <iframe id="vimeo-frame" src="https://vimeo.com/showcase/12357145/embed2" allow="autoplay; fullscreen; picture-in-picture; gyroscope; accelerometer; clipboard-write; encrypted-media; web-share" allowfullscreen webkitallowfullscreen mozallowfullscreen frameborder="0" title="ストサポ 動画"></iframe>
     </div>
   </div>
 
@@ -1381,20 +1388,35 @@
       h += '<div class="actions">'+acts.join('')+'</div>';
       return h;
     }
-    function norm(s){ return String(s||'').toLowerCase().replace(/\s+/g,''); }
+    var FILLER=['どうしたらよいですか','どうしたら良いですか','どうしたらいいですか','どうすればよいですか','どうしたらよい','どうしたら良い','どうしたらいい','どうすればいい','どうすれば','どうする','良いですか','よいですか','いいですか','教えてください','教えて下さい','教えてほしい','教えて欲しい','教えて','おしえて','ください','下さい','ほしい','欲しい','でしょうか','ですか','について','に関して','場合は','場合','ときは','時は','したい','ますか','のですが','のでしょう','たいです'];
+    function norm(s){ s=String(s||'').toLowerCase().replace(/\s+/g,'').replace(/[。、，・？！\?\!（）\(\)「」『』：:；;、]/g,''); for(var i=0;i<FILLER.length;i++){ if(s.indexOf(FILLER[i])>=0) s=s.split(FILLER[i]).join(''); } return s; }
     function grams(s){ s=norm(s); var g=[]; if(s.length<=1){ if(s) g.push(s); return g; } for(var i=0;i<s.length-1;i++) g.push(s.substr(i,2)); return g; }
-    function findEntry(text){
-      var ug=grams(text); if(!ug.length) return null;
-      var ut=norm(text), best=null, bestScore=0;
-      for(var i=0;i<KB.length;i++){
-        var e=KB[i];
+    var _DF=null, _N=0;
+    function ensureIndex(){
+      if(_DF) return; _DF={}; _N=KB.length;
+      for(var i=0;i<KB.length;i++){ var e=KB[i];
         if(!e._g){ e._g={}; var eg=grams(e.q+' '+(e.cat||'')); for(var j=0;j<eg.length;j++) e._g[eg[j]]=1; }
-        var m=0; for(var k=0;k<ug.length;k++){ if(e._g[ug[k]]) m++; }
-        var eq=norm(e.q);
-        if(eq && (ut.indexOf(eq)>=0 || eq.indexOf(ut)>=0)) m+=6;
-        if(m>bestScore){ bestScore=m; best=e; }
+        for(var g in e._g){ _DF[g]=(_DF[g]||0)+1; }
       }
-      return bestScore>=2 ? best : null;
+    }
+    function idf(g){ return Math.log((_N+1)/((_DF[g]||1))); }
+    function findEntry(text){
+      ensureIndex();
+      var ut=norm(text), ug=grams(text); if(!ug.length) return null;
+      var seen={}, uq=[]; for(var i=0;i<ug.length;i++){ if(!seen[ug[i]]){ seen[ug[i]]=1; uq.push(ug[i]); } }
+      var qn=0; for(var i=0;i<uq.length;i++){ var w=idf(uq[i]); qn+=w*w; } qn=Math.sqrt(qn)||1;
+      var best=null, bestCos=0, bestSub=false;
+      for(var k=0;k<KB.length;k++){
+        var e=KB[k];
+        if(e._n===undefined){ var sm=0; for(var g in e._g){ var wi=idf(g); sm+=wi*wi; } e._n=Math.sqrt(sm)||1; }
+        var dot=0; for(var j=0;j<uq.length;j++){ var g2=uq[j]; if(e._g[g2]){ var w2=idf(g2); dot+=w2*w2; } }
+        var cos=dot/(qn*e._n);
+        var eq=norm(e.q); var sub=!!(eq && (ut.indexOf(eq)>=0 || eq.indexOf(ut)>=0));
+        if(sub) cos+=1;
+        if(cos>bestCos){ bestCos=cos; best=e; bestSub=sub; }
+      }
+      if(bestSub) return best;
+      return bestCos>=0.3 ? best : null;
     }
     function isDanger(t){ for(var i=0;i<DANGER.length;i++){ if(t.indexOf(DANGER[i])>=0) return true; } return false; }
     function reply(text){
@@ -1508,6 +1530,13 @@
     document.querySelectorAll('.tabbar .tab').forEach(function(t){ t.classList.remove('active'); });
     if(btn) btn.classList.add('active');
     openPage(pageId);
+  }
+  function switchVideo(id){
+    var f = document.getElementById('vimeo-frame');
+    if(f) f.src = 'https://vimeo.com/showcase/' + id + '/embed2';
+    var vin = document.getElementById('vtab-in'), vout = document.getElementById('vtab-out');
+    if(vin) vin.classList.toggle('on', id === '12357145');
+    if(vout) vout.classList.toggle('on', id === '12356161');
   }
 
   /* ===== デジタルブック 操作 ===== */
