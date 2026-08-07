@@ -210,7 +210,7 @@
   .vfeatured .vthumb{ border-radius:0; }
   .vfeatured .vmeta{ background:#fff; padding:11px 13px; }
   .vfeatured .vt{ font-weight:700; font-size:14px; color:var(--blue-ink); line-height:1.45; }
-  .vgrid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px 12px; }
+  .vgrid2{ display:grid; grid-template-columns:1fr; gap:16px; }
   .vcard{ text-decoration:none; }
   .vthumb{ position:relative; width:100%; aspect-ratio:16/9; background:#cdd8dd center/cover no-repeat; border-radius:12px; }
   .vcard .vthumb{ box-shadow:var(--shadow-sm); }
@@ -222,10 +222,10 @@
   .vthumb .vdur{ position:absolute; right:6px; bottom:6px; background:rgba(0,0,0,.72); color:#fff; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:6px; }
   .vloading{ text-align:center; color:#8a9298; font-size:12.5px; padding:34px 0; }
   #page-video.modal-open{ z-index:50; }
-  .vmodal{ position:absolute; inset:0; z-index:60; background:rgba(0,0,0,.92); display:none; align-items:center; justify-content:center; }
+  .vmodal{ position:fixed; inset:0; z-index:9999; background:#000; display:none; align-items:center; justify-content:center; }
   .vmodal.on{ display:flex; }
-  .vmodal-frame{ width:100%; }
-  .vmodal-frame iframe{ width:100%; aspect-ratio:16/9; border:0; display:block; }
+  .vmodal-frame{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  .vmodal-frame iframe{ width:min(100vw, 177.78vh); height:min(56.25vw, 100vh); border:0; display:block; }
   .vmodal-x{ position:absolute; top:14px; right:14px; z-index:61; width:38px; height:38px; border-radius:50%; border:0; background:rgba(255,255,255,.92); color:#1a2830; font-size:17px; font-weight:700; cursor:pointer; }
   /* ===== デジタルブック（サポートブック） ===== */
   #page-book{ display:flex; flex-direction:column; padding-bottom:calc(64px + env(safe-area-inset-bottom,0)); background:#e9edf0; }
@@ -1564,6 +1564,37 @@
       list.innerHTML = ids.length ? _vgrid(ids, ms) : '<div class="vloading">動画がありません</div>';
     });
   }
+  var VSYN = [
+    ['入浴','お風呂','風呂','ふろ','おふろ','バス','シャワー','温泉','湯船','銭湯'],
+    ['におい','匂い','臭い','消臭','ニオイ','くさい','脱臭'],
+    ['排泄','排便','排尿','排泄物','うんち','おしっこ','便','トイレ'],
+    ['交換','取り替え','取替え','貼り替え','貼替え','付け替え','交換方法'],
+    ['はがす','剥がす','剥離','はがし方'],
+    ['貼る','装着','貼り方','貼付'],
+    ['皮膚','肌','お肌','かぶれ','ただれ','スキン','スキンケア','ケア'],
+    ['面板','プレート','ベースプレート'],
+    ['潤滑剤','潤滑','すべり','ゼリー'],
+    ['装具','パウチ','ストーマ袋','袋','装具交換'],
+    ['型取り','カット','切る','サイズ合わせ','穴あけ'],
+    ['観察','チェック','見方','セルフチェック']
+  ];
+  function _vnorm(s){
+    s = String(s||'').toLowerCase();
+    try { s = s.normalize('NFKC'); } catch(e){}
+    s = s.replace(/[ぁ-ゖ]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)+0x60); }); // ひら→カナ
+    s = s.replace(/[\s　・（）\(\)、。／\/]/g, '');
+    return s;
+  }
+  function _vexpand(qn){
+    var terms=[qn];
+    for(var i=0;i<VSYN.length;i++){
+      var grp=VSYN[i].map(_vnorm);
+      var hit=false;
+      for(var j=0;j<grp.length;j++){ var t=grp[j]; if(t && (qn.indexOf(t)>=0 || t.indexOf(qn)>=0)){ hit=true; break; } }
+      if(hit){ for(var k=0;k<grp.length;k++){ if(grp[k] && terms.indexOf(grp[k])<0) terms.push(grp[k]); } }
+    }
+    return terms;
+  }
   function vSearch(){
     var si=document.getElementById('vsearch-input'); var q=(si?si.value:'').trim();
     var list=document.getElementById('vlist'), tabs=document.getElementById('vtabs-row'); if(!list) return;
@@ -1573,8 +1604,8 @@
     list.innerHTML='<div class="vloading">検索中…</div>';
     Promise.all(allIds.map(_voembed)).then(function(){
       if(si.value.trim()!==q) return;
-      var qq=q.toLowerCase();
-      var hits=allIds.filter(function(id){ return (_vcache[id].title||'').toLowerCase().indexOf(qq)>=0; });
+      var terms=_vexpand(_vnorm(q));
+      var hits=allIds.filter(function(id){ var tn=_vnorm(_vcache[id].title||''); for(var t=0;t<terms.length;t++){ if(terms[t] && tn.indexOf(terms[t])>=0) return true; } return false; });
       if(!hits.length){ list.innerHTML='<div class="vloading">「'+_vesc(q)+'」に一致する動画が見つかりませんでした</div>'; return; }
       list.innerHTML='<div class="vsec-label">検索結果（'+hits.length+'件）</div>'+_vgrid(hits, hits.map(function(id){return _vcache[id];}));
     });
@@ -1582,6 +1613,7 @@
   function playVid(id){
     var m=document.getElementById('vmodal'), f=document.getElementById('vmodal-frame');
     f.innerHTML = '<iframe src="https://player.vimeo.com/video/'+id+'?autoplay=1&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen frameborder="0"></iframe>';
+    if(m.parentElement !== document.body) document.body.appendChild(m); // .pageのtransformから外して全画面化
     m.classList.add('on'); var pv=document.getElementById('page-video'); if(pv) pv.classList.add('modal-open');
   }
   function closeVid(){
