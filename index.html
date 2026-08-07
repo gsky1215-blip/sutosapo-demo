@@ -1384,8 +1384,7 @@
       if(entry.warn){ h += '<div style="margin-top:9px;padding:8px 11px;background:#fdeede;border:1px solid #f3dfc6;border-radius:10px;color:#9a5a12;font-size:12.5px;font-weight:700;line-height:1.6;">'+esc(MED)+'</div>'; }
       var acts=[];
       if(entry.store){ acts.push('<a class="act store" href="https://mpi-store.com/" target="_blank" rel="noopener">MPIオンラインストアで見る ↗</a>'); }
-      acts.push('<a class="act warm" href="#" onclick="closePage(\'page-chat\');openPage(\'page-soudan\');return false;">担当者に相談</a>');
-      h += '<div class="actions">'+acts.join('')+'</div>';
+      if(acts.length) h += '<div class="actions">'+acts.join('')+'</div>';
       return h;
     }
     var FILLER=['どうしたらよいですか','どうしたら良いですか','どうしたらいいですか','どうすればよいですか','どうしたらよい','どうしたら良い','どうしたらいい','どうすればいい','どうすれば','どうする','良いですか','よいですか','いいですか','教えてください','教えて下さい','教えてほしい','教えて欲しい','教えて','おしえて','ください','下さい','ほしい','欲しい','でしょうか','ですか','について','に関して','場合は','場合','ときは','時は','したい','ますか','のですが','のでしょう','たいです'];
