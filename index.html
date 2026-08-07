@@ -1303,74 +1303,22 @@
     <p class="lead" style="margin-top:16px;">受け取り方やセット内容について詳しくは、<a href="#" onclick="openPage('page-soudan');return false;">無料相談</a>でご案内できます。</p>
   </div>
 
-  <!-- ===== サブページ: サポートブック（デジタルブック） ===== -->
+  <!-- ===== サブページ: サポートブック（電子書籍・埋め込み） ===== -->
+  <style>
+    #page-book{ z-index:40; padding-bottom:0; background:#eef6f8; }
+    .book-appbar{ flex:none; display:flex; align-items:center; gap:6px; padding:7px 10px; background:#fff; border-bottom:1px solid var(--line); }
+    .book-appbar > span{ font-weight:800; font-size:15px; color:var(--blue-ink); }
+    .book-frame{ flex:1 1 auto; width:100%; border:0; display:block; background:#eef6f8; }
+  </style>
   <div class="page" id="page-book" aria-hidden="true">
-    <div class="page-head">
+    <div class="book-appbar">
       <button class="back" onclick="closePage('page-book')" aria-label="ホームに戻る">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       </button>
-      <h2>サポートブック</h2>
+      <span>サポートブック</span>
     </div>
-    <span class="book-count"><b id="book-cur">1</b> / 48</span>
-    <span class="book-hint" id="book-hint">ダブルタップ／ピンチで拡大</span>
-    <button class="book-nav book-prev" id="book-prev" onclick="bookGo(-1)" aria-label="前のページ" disabled>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-    </button>
-    <button class="book-nav book-next" id="book-next" onclick="bookGo(1)" aria-label="次のページ">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-    </button>
-    <div class="book-track" id="book-track" onscroll="bookUpdate()">
-      <div class="book-page"><img src="assets/book/p01.jpg" loading="eager" width="1500" height="2122" alt="サポートブック 1ページ"></div>
-      <div class="book-page"><img src="assets/book/p02.jpg" loading="eager" width="1500" height="2122" alt="サポートブック 2ページ"></div>
-      <div class="book-page"><img src="assets/book/p03.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 3ページ"></div>
-      <div class="book-page"><img src="assets/book/p04.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 4ページ"></div>
-      <div class="book-page"><img src="assets/book/p05.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 5ページ"></div>
-      <div class="book-page"><img src="assets/book/p06.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 6ページ"></div>
-      <div class="book-page"><img src="assets/book/p07.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 7ページ"></div>
-      <div class="book-page"><img src="assets/book/p08.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 8ページ"></div>
-      <div class="book-page"><img src="assets/book/p09.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 9ページ"></div>
-      <div class="book-page"><img src="assets/book/p10.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 10ページ"></div>
-      <div class="book-page"><img src="assets/book/p11.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 11ページ"></div>
-      <div class="book-page"><img src="assets/book/p12.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 12ページ"></div>
-      <div class="book-page"><img src="assets/book/p13.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 13ページ"></div>
-      <div class="book-page"><img src="assets/book/p14.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 14ページ"></div>
-      <div class="book-page"><img src="assets/book/p15.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 15ページ"></div>
-      <div class="book-page"><img src="assets/book/p16.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 16ページ"></div>
-      <div class="book-page"><img src="assets/book/p17.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 17ページ"></div>
-      <div class="book-page"><img src="assets/book/p18.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 18ページ"></div>
-      <div class="book-page"><img src="assets/book/p19.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 19ページ"></div>
-      <div class="book-page"><img src="assets/book/p20.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 20ページ"></div>
-      <div class="book-page"><img src="assets/book/p21.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 21ページ"></div>
-      <div class="book-page"><img src="assets/book/p22.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 22ページ"></div>
-      <div class="book-page"><img src="assets/book/p23.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 23ページ"></div>
-      <div class="book-page"><img src="assets/book/p24.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 24ページ"></div>
-      <div class="book-page"><img src="assets/book/p25.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 25ページ"></div>
-      <div class="book-page"><img src="assets/book/p26.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 26ページ"></div>
-      <div class="book-page"><img src="assets/book/p27.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 27ページ"></div>
-      <div class="book-page"><img src="assets/book/p28.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 28ページ"></div>
-      <div class="book-page"><img src="assets/book/p29.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 29ページ"></div>
-      <div class="book-page"><img src="assets/book/p30.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 30ページ"></div>
-      <div class="book-page"><img src="assets/book/p31.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 31ページ"></div>
-      <div class="book-page"><img src="assets/book/p32.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 32ページ"></div>
-      <div class="book-page"><img src="assets/book/p33.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 33ページ"></div>
-      <div class="book-page"><img src="assets/book/p34.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 34ページ"></div>
-      <div class="book-page"><img src="assets/book/p35.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 35ページ"></div>
-      <div class="book-page"><img src="assets/book/p36.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 36ページ"></div>
-      <div class="book-page"><img src="assets/book/p37.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 37ページ"></div>
-      <div class="book-page"><img src="assets/book/p38.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 38ページ"></div>
-      <div class="book-page"><img src="assets/book/p39.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 39ページ"></div>
-      <div class="book-page"><img src="assets/book/p40.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 40ページ"></div>
-      <div class="book-page"><img src="assets/book/p41.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 41ページ"></div>
-      <div class="book-page"><img src="assets/book/p42.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 42ページ"></div>
-      <div class="book-page"><img src="assets/book/p43.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 43ページ"></div>
-      <div class="book-page"><img src="assets/book/p44.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 44ページ"></div>
-      <div class="book-page"><img src="assets/book/p45.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 45ページ"></div>
-      <div class="book-page"><img src="assets/book/p46.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 46ページ"></div>
-      <div class="book-page"><img src="assets/book/p47.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 47ページ"></div>
-      <div class="book-page"><img src="assets/book/p48.jpg" loading="lazy" width="1500" height="2122" alt="サポートブック 48ページ"></div>
-    </div>
+    <iframe class="book-frame" src="book.html" title="ストーマライフ サポートブック" loading="lazy"></iframe>
   </div>
-
 
   <!-- ===== サブページ: AIチャット相談 ===== -->
   <style>
