@@ -1,0 +1,11 @@
+
+# 2026-09-05 追加: 公開リポジトリに入れないもの
+.DS_Store
+.claude/
+_sheet.csv
+_sheet.md
+*.xlsx
+Stoma Life Support book_1.pdf
+サポートブック.jpg
+assets/logo/STSUP_logo-*.png
+assets/logo/image_*.png
