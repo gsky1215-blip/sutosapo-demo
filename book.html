@@ -51,6 +51,12 @@ html,body{
 }
 #topbar .icon-btn:hover{background:rgba(255,255,255,.32);}
 #topbar .icon-btn svg{width:22px;height:22px;fill:#fff;}
+#topbar .icon-btn.labeled{
+  width:auto;min-width:42px;padding:0 11px;gap:6px;
+}
+#topbar .icon-btn.labeled span{
+  font-size:clamp(11px,3vw,13px);font-weight:700;letter-spacing:.02em;white-space:nowrap;
+}
 #booktitle{
   flex:1 1 auto;min-width:0;
   font-size:clamp(13px,3.6vw,16px);font-weight:700;letter-spacing:.02em;
@@ -87,10 +93,10 @@ html,body{
   flex:0 0 100vw;
   height:100%;
   display:flex;align-items:center;justify-content:center;
-  padding:6px;
+  padding:2px;
 }
 @media (min-width:480px){
-  .page-slide{padding:14px;}
+  .page-slide{padding:6px;}
 }
 .page-slide img{
   max-width:100%;max-height:100%;
@@ -125,10 +131,11 @@ html,body{
   flex:0 0 auto;
   background:var(--panel);
   border-top:1px solid #dbe7ea;
-  padding:8px 0 calc(8px + env(safe-area-inset-bottom)) 0;
+  padding:4px 0 calc(6px + env(safe-area-inset-bottom)) 0;
 }
 #slicerTrack{
-  display:flex;gap:8px;
+  display:none;
+  gap:8px;
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
   padding:4px max(14px, env(safe-area-inset-left)) 8px max(14px, env(safe-area-inset-right));
@@ -158,7 +165,7 @@ html,body{
 
 /* slicer range slider */
 #sliceRangeWrap{
-  padding:0 14px 6px 14px;
+  padding:2px 14px 4px 14px;
   display:flex;align-items:center;gap:8px;
 }
 #sliceRange{
@@ -243,8 +250,9 @@ html,body{
 <div id="app">
 
   <div id="topbar">
-    <button class="icon-btn" id="tocBtn" title="目次">
+    <button class="icon-btn labeled" id="tocBtn" title="もくじ（目次）を開く" aria-label="もくじ（目次）を開く">
       <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <span>もくじ</span>
     </button>
     <div id="booktitle">ストーマライフ サポートブック
       <small>Stoma Life Support Book</small>
@@ -323,22 +331,8 @@ PAGES.forEach((p, i) => {
   track.appendChild(slide);
 });
 
-// build slicer thumbnails
-PAGES.forEach((p, i) => {
-  const t = document.createElement('div');
-  t.className = 'thumb';
-  t.dataset.idx = i + 1;
-  const img = document.createElement('img');
-  img.loading = 'lazy';
-  img.src = 'data:image/jpeg;base64,' + p.thumb;
-  const num = document.createElement('div');
-  num.className = 'tnum';
-  num.textContent = p.label ? p.label : (i+1);
-  t.appendChild(img);
-  t.appendChild(num);
-  t.addEventListener('click', () => goTo(i + 1));
-  slicerTrack.appendChild(t);
-});
+// ページ送りのサムネイル帯は表示しない（本文ページを大きく見せるため）
+// ページ移動は上部の「もくじ」とスライダー、スワイプ、左右の矢印で行う
 
 // build TOC
 function renderTocItem(item, isMain) {
