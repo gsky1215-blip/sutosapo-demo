@@ -1348,7 +1348,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,200), at:new Date().toISOString(), ver:'v40' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v41' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1457,10 +1457,10 @@
     }
     function isDanger(t){ for(var i=0;i<DANGER.length;i++){ if(t.indexOf(DANGER[i])>=0) return true; } return false; }
     function reply(text,p){
-      if(isDanger(text)){ addBot('気になる症状は、ここでの自己判断は避けてください。<b>早めに医療機関・ストーマ外来にご相談ください。</b>',p); window.ssLog('danger', text, ''); return; }
+      if(isDanger(text)){ addBot('気になる症状は、ここでの自己判断は避けてください。<b>早めに医療機関・ストーマ外来にご相談ください。</b>',p); window.ssLog('danger', text, '気になる症状は、ここでの自己判断は避けてください。早めに医療機関・ストーマ外来にご相談ください。'); return; }
       var e=findEntry(text);
-      if(e){ addBot(window.ssAnswerHtml(e),p); window.ssLog('hit', text, e.q); }
-      else { addBot('うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。',p); window.ssLog('miss', text, ''); }
+      if(e){ addBot(window.ssAnswerHtml(e),p); window.ssLog('hit', text, e.a); }
+      else { addBot('うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。',p); window.ssLog('miss', text, 'うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。'); }
     }
     window.chatSend=function(){ var inp=el('chat-input'); if(!inp)return; var v=(inp.value||'').trim(); if(!v)return; inp.value=''; var p=String(Date.now()); addUser(v,p); setTimeout(function(){reply(v,p);},120); };
     window.chatChip=function(t){ var p=String(Date.now()); addUser(t,p); setTimeout(function(){reply(t,p);},120); };
