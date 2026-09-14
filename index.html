@@ -1344,11 +1344,11 @@
     return false;
   }
   // ===== チャットの記録: 質問と結果を受け口（Apps Script ウェブアプリ）へ送る。URLが空なら送らない =====
-  window.SS_LOG_URL = '';
+  window.SS_LOG_URL = 'https://script.google.com/macros/s/AKfycbwLVyOsCiFelkvfX5OV4ScXtgv0t98KHVXPTWWhHgYc-JII4KqGG9e2uVVuHhJO1E8gZA/exec';
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,200), at:new Date().toISOString(), ver:'v39' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,200), at:new Date().toISOString(), ver:'v40' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
