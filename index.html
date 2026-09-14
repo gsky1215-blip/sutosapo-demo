@@ -136,9 +136,8 @@
   }
   .tile:active{ transform:scale(.975); }
   .tile:focus-visible{ outline:3px solid var(--teal); outline-offset:2px; }
-  .tile .pic{ height:44px; display:flex; align-items:center; }
-  .tile .pic .ic{ width:46px; height:46px; border-radius:14px; display:grid; place-items:center; }
-  .tile .pic .ic svg{ width:26px; height:26px; }
+  .tile .pic{ height:44px; display:flex; align-items:center; justify-content:center; }
+  .tile .pic svg{ height:42px; width:auto; }
   .tile .t{ font-family:var(--font-display); font-weight:700; font-size:15px; line-height:1.3; }
   .tile .d{ font-size:11px; color:#8a9298; line-height:1.5; }
   .badge{
@@ -781,37 +780,95 @@
   <nav class="grid" aria-label="メインメニュー">
 
     <a class="tile" href="#" onclick="openPage('page-video');return false;">
-      <span class="pic"><span class="ic" style="background:#e4f3fb;color:#0d8ab0;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg></span></span>
+      <span class="pic">
+        <!-- 動画: にっこりテレビ -->
+        <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="6" width="52" height="38" rx="9" fill="#e4f3fb"/>
+          <rect x="4" y="6" width="52" height="38" rx="9" stroke="#16a6cc" stroke-width="2.6"/>
+          <circle cx="22" cy="21" r="2.6" fill="#0d8ab0"/>
+          <circle cx="38" cy="21" r="2.6" fill="#0d8ab0"/>
+          <path d="M23 29 Q30 35 37 29" stroke="#0d8ab0" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M50 2 L54 6 M58 8 L54 6" stroke="#f2a869" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </span>
       <span class="t">動画を観る</span>
       <span class="d">装具交換の基本を動画で</span>
     </a>
 
     <a class="tile" href="#" onclick="openPage('page-book');return false;">
-      <span class="pic"><span class="ic" style="background:#f6efdd;color:#b8862e;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span></span>
+      <span class="pic">
+        <!-- サポートブック: 本 -->
+        <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 10 a5 5 0 0 1 5-4 h14 v34 h-14 a5 5 0 0 0-5 4z" fill="#f6efdd" stroke="#c09437" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M48 10 a5 5 0 0 0-5-4 h-14 v34 h14 a5 5 0 0 1 5 4z" fill="#fff" stroke="#c09437" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M15 15 h9 M15 21 h9 M15 27 h9 M34 15 h9 M34 21 h9 M34 27 h9" stroke="#d9b978" stroke-width="2" stroke-linecap="round"/>
+          <path d="M52 8 C55 10 56 14 52 17 C48 14 49 10 52 8Z" fill="#7cbf8c"/>
+        </svg>
+      </span>
       <span class="t">サポートブック</span>
       <span class="d">知りたいことをいつでも確認</span>
     </a>
 
     <a class="tile" href="#" onclick="openPage('page-shop');return false;">
-      <span class="pic"><span class="ic" style="background:#e9f1fb;color:#2a76ac;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span></span>
+      <span class="pic">
+        <!-- 用品: 買い物バッグ -->
+        <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 14 h30 l-2.5 28 a4 4 0 0 1-4 3.6 h-17 a4 4 0 0 1-4-3.6z" fill="#e9f1fb" stroke="#2a76ac" stroke-width="2.6" stroke-linejoin="round"/>
+          <path d="M21 18 v-4 a8 8 0 0 1 16 0 v4" stroke="#2a76ac" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <circle cx="24" cy="27" r="2.2" fill="#2a76ac"/>
+          <circle cx="34" cy="27" r="2.2" fill="#2a76ac"/>
+          <path d="M24 34 Q29 39 34 34" stroke="#2a76ac" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M50 24 C53 26 54 30 50 33 C46 30 47 26 50 24Z" fill="#f2a869"/>
+        </svg>
+      </span>
       <span class="t">用品を知る</span>
       <span class="d">種類や使い方をチェック</span>
     </a>
 
     <a class="tile" href="#" onclick="openPage('page-chat');return false;">
-      <span class="pic"><span class="ic" style="background:#e6f4e9;color:#3a9d63;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></span></span>
+      <span class="pic">
+        <!-- 相談: ふきだし2つ -->
+        <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 10 h28 a6 6 0 0 1 6 6 v8 a6 6 0 0 1-6 6 h-16 l-7 6 v-6 h-5 a6 6 0 0 1-6-6 v-8 a6 6 0 0 1 6-6z" fill="#e6f4e9" stroke="#3a9d63" stroke-width="2.4"/>
+          <circle cx="17" cy="19" r="2" fill="#3a9d63"/>
+          <circle cx="27" cy="19" r="2" fill="#3a9d63"/>
+          <path d="M17 25 Q22 29 27 25" stroke="#3a9d63" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M42 22 h12 a5 5 0 0 1 5 5 v5 a5 5 0 0 1-5 5 h-3 v5 l-6-5 h-3 a5 5 0 0 1-5-5 v-5 a5 5 0 0 1 5-5z" fill="#fff" stroke="#16a6cc" stroke-width="2.4"/>
+          <circle cx="46" cy="29.5" r="1.5" fill="#16a6cc"/>
+          <circle cx="51" cy="29.5" r="1.5" fill="#16a6cc"/>
+          <circle cx="56" cy="29.5" r="1.5" fill="#16a6cc"/>
+        </svg>
+      </span>
       <span class="t">チャットに相談</span>
       <span class="d">気になることを聞いてみよう</span>
     </a>
 
     <a class="tile" href="#" onclick="openPage('page-onayami');return false;">
-      <span class="pic"><span class="ic" style="background:#fbe8d6;color:#d9843a;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M9 9a2 2 0 0 1 3.9.7c0 1.3-2 1.6-2 3"/><path d="M11 15.5h.01"/></svg></span></span>
+      <span class="pic">
+        <!-- お悩み: 虫めがねと「？」 -->
+        <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="21" r="14" fill="#fbe8d6"/>
+          <circle cx="26" cy="21" r="14" stroke="#e2924e" stroke-width="2.6"/>
+          <path d="M36 31 L46 41" stroke="#e2924e" stroke-width="4" stroke-linecap="round"/>
+          <path d="M22.5 17 a4 4 0 0 1 7 2.6 c0 2.4-3.2 2.6-3.2 5" stroke="#c97b32" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <circle cx="26.3" cy="28.6" r="1.6" fill="#c97b32"/>
+          <path d="M52 12 C55 14 56 18 52 21 C48 18 49 14 52 12Z" fill="#7cbf8c"/>
+        </svg>
+      </span>
       <span class="t">お悩みから知る</span>
       <span class="d">困りごとから答えを探す</span>
     </a>
 
     <a class="tile" href="#" onclick="openPage('page-fukushi');return false;">
-      <span class="pic"><span class="ic" style="background:#fbe1e6;color:#d46a86;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 20 7H4Z"/></svg></span></span>
+      <span class="pic">
+        <!-- 福祉: 手のひらにハート -->
+        <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 14 c-2.6-4.4-10-3.4-10 2 c0 4.6 5.4 7.4 10 11 c4.6-3.6 10-6.4 10-11 c0-5.4-7.4-6.4-10-2z" fill="#fbe1e6" stroke="#d46a86" stroke-width="2.6" stroke-linejoin="round"/>
+          <path d="M15 32 q17 13 34 0" stroke="#3a9d63" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M15 32 v5 M49 32 v5" stroke="#3a9d63" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M52 9 C55 11 56 15 52 18 C48 15 49 11 52 9Z" fill="#f2a869"/>
+        </svg>
+      </span>
       <span class="t">福祉制度について</span>
       <span class="d">給付制度・助成のこと</span>
     </a>
