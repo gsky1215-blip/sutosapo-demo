@@ -1254,6 +1254,7 @@
   <!-- ===== サブページ: AIチャット相談 ===== -->
   <style>
   #page-chat{ display:flex; flex-direction:column; padding-bottom:calc(74px + env(safe-area-inset-bottom,0)); background:var(--base); }
+  .chat-clear{ margin-left:auto; flex:none; background:none; border:1px solid var(--line); border-radius:999px; color:#7c8a92; font-size:11px; font-weight:700; padding:5px 10px; cursor:pointer; font-family:var(--font-display); }
   .chat-note{ flex:none; font-size:11px; color:#7c8a92; text-align:center; padding:6px 16px 2px; }
   .chat-log{ flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:10px 14px 8px; display:flex; flex-direction:column; gap:9px; }
   .chat-log::-webkit-scrollbar{ width:0; }
@@ -1278,6 +1279,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       </button>
       <h2>チャットで相談</h2>
+      <button class="chat-clear" onclick="chatClear();return false;" aria-label="相談の履歴を消す">履歴を消す</button>
     </div>
     <p class="chat-note">よくある質問にお答えします。医療的な判断が必要なときは医療機関へご相談ください。</p>
     <div class="chat-log" id="chat-log"></div>
@@ -1339,12 +1341,12 @@
     }catch(e){}
     return false;
   }
-  // ===== チャットの「該当なし」記録: 受け口（Apps Script ウェブアプリ）のURL。空なら送らない =====
+  // ===== チャットの記録: 質問と結果を受け口（Apps Script ウェブアプリ）へ送る。URLが空なら送らない =====
   window.SS_LOG_URL = '';
-  window.ssLogMiss = function(q){
+  window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:'chat-miss', q:String(q||'').slice(0,300), at:new Date().toISOString(), ver:'v37' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,200), at:new Date().toISOString(), ver:'v38' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1408,8 +1410,13 @@
 
     // ===== チャット =====
     function scrollDown(){ var l=el('chat-log'); if(l) l.scrollTop=l.scrollHeight; }
-    function addUser(t){ var l=el('chat-log'); if(!l)return; var d=document.createElement('div'); d.className='msg user'; d.textContent=t; l.appendChild(d); scrollDown(); }
-    function addBot(html){ var l=el('chat-log'); if(!l)return; var d=document.createElement('div'); d.className='msg bot'; d.innerHTML=html; l.appendChild(d); scrollDown(); }
+    // 履歴はこのスマホの中（localStorage）だけに保存。直近50件。サーバーには送らない
+    var HIST_KEY='ss_chat_v1', HIST_MAX=50, restoring=false;
+    function histLoad(){ try{ var a=JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+    function histPush(r,h){ if(restoring) return; try{ var a=histLoad(); a.push({r:r,h:h}); if(a.length>HIST_MAX) a=a.slice(a.length-HIST_MAX); localStorage.setItem(HIST_KEY, JSON.stringify(a)); }catch(e){} }
+    window.chatClear=function(){ if(!confirm('この端末に残っている相談の履歴を消します。よろしいですか？')) return; try{ localStorage.removeItem(HIST_KEY); }catch(e){} var l=el('chat-log'); if(l){ l.innerHTML=''; delete l.dataset.init; } initChat(); };
+    function addUser(t){ var l=el('chat-log'); if(!l)return; var d=document.createElement('div'); d.className='msg user'; d.textContent=t; l.appendChild(d); histPush('u',t); scrollDown(); }
+    function addBot(html){ var l=el('chat-log'); if(!l)return; var d=document.createElement('div'); d.className='msg bot'; d.innerHTML=html; l.appendChild(d); histPush('b',html); scrollDown(); }
     var FILLER=['どうしたらよいですか','どうしたら良いですか','どうしたらいいですか','どうすればよいですか','どうしたらよい','どうしたら良い','どうしたらいい','どうすればいい','どうすれば','どうする','良いですか','よいですか','いいですか','教えてください','教えて下さい','教えてほしい','教えて欲しい','教えて','おしえて','ください','下さい','ほしい','欲しい','でしょうか','ですか','について','に関して','場合は','場合','ときは','時は','したい','ますか','のですが','のでしょう','たいです'];
     function norm(s){ s=String(s||'').toLowerCase().replace(/\s+/g,'').replace(/[。、，・？！\?\!（）\(\)「」『』：:；;、]/g,''); for(var i=0;i<FILLER.length;i++){ if(s.indexOf(FILLER[i])>=0) s=s.split(FILLER[i]).join(''); } return s; }
     function grams(s){ s=norm(s); var g=[]; if(s.length<=1){ if(s) g.push(s); return g; } for(var i=0;i<s.length-1;i++) g.push(s.substr(i,2)); return g; }
@@ -1446,10 +1453,10 @@
     }
     function isDanger(t){ for(var i=0;i<DANGER.length;i++){ if(t.indexOf(DANGER[i])>=0) return true; } return false; }
     function reply(text){
-      if(isDanger(text)){ addBot('気になる症状は、ここでの自己判断は避けてください。<b>早めに医療機関・ストーマ外来にご相談ください。</b>'); return; }
+      if(isDanger(text)){ addBot('気になる症状は、ここでの自己判断は避けてください。<b>早めに医療機関・ストーマ外来にご相談ください。</b>'); window.ssLog('danger', text, ''); return; }
       var e=findEntry(text);
-      if(e){ addBot(window.ssAnswerHtml(e)); }
-      else { addBot('うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。'); window.ssLogMiss(text); }
+      if(e){ addBot(window.ssAnswerHtml(e)); window.ssLog('hit', text, e.q); }
+      else { addBot('うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。'); window.ssLog('miss', text, ''); }
     }
     window.chatSend=function(){ var inp=el('chat-input'); if(!inp)return; var v=(inp.value||'').trim(); if(!v)return; inp.value=''; addUser(v); setTimeout(function(){reply(v);},120); };
     window.chatChip=function(t){ addUser(t); setTimeout(function(){reply(t);},120); };
@@ -1465,7 +1472,7 @@
       }
     };
     function renderChips(){ var c=el('chat-chips'); if(!c)return; c.innerHTML=''; CHIPS.forEach(function(q){ var b=document.createElement('button'); b.className='chat-chip'; b.textContent=q; b.onclick=function(){chatChip(q);}; c.appendChild(b); }); }
-    function initChat(){ if(!el('chat-log'))return; if(el('chat-log').dataset.init)return; el('chat-log').dataset.init='1'; addBot('こんにちは。ストーマのことなら、まずここで聞いてみてください。装具・スキンケア・におい・お風呂・購入など、気になることをどうぞ。下のボタンから選ぶこともできます。'); renderChips(); }
+    function initChat(){ if(!el('chat-log'))return; if(el('chat-log').dataset.init)return; el('chat-log').dataset.init='1'; var saved=histLoad(); if(saved.length){ restoring=true; for(var i=0;i<saved.length;i++){ if(saved[i].r==='u') addUser(saved[i].h); else addBot(saved[i].h); } restoring=false; renderChips(); return; } addBot('こんにちは。ストーマのことなら、まずここで聞いてみてください。装具・スキンケア・におい・お風呂・購入など、気になることをどうぞ。下のボタンから選ぶこともできます。'); renderChips(); }
 
     // ===== お悩みから探す =====
     window.renderWorry = function(){
