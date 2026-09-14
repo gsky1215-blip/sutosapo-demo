@@ -1348,7 +1348,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v42' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v43' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1456,11 +1456,41 @@
       return bestCos>=0.3 ? best : null;
     }
     function isDanger(t){ for(var i=0;i<DANGER.length;i++){ if(t.indexOf(DANGER[i])>=0) return true; } return false; }
+    // ===== 該当なしのときの聞き返し（AIなし・定型） =====
+    // 入力の言葉と、各お悩み項目に属するQ&A（質問文＋キーワード）の重なりで近い項目を3つ選ぶ
+    var HINT = {"ぬるぬる":["皮膚のかゆみ、トラブル","ストーマケア方法","漏れが不安"],"べたべた":["ストーマケア方法","皮膚のかゆみ、トラブル"],"痛い":["皮膚のかゆみ、トラブル","ストーマケア方法"],"痛":["皮膚のかゆみ、トラブル"],"赤":["皮膚のかゆみ、トラブル"],"かゆ":["皮膚のかゆみ、トラブル"],"臭":["においやガス、音が気になる"],"匂":["においやガス、音が気になる"],"音":["においやガス、音が気になる"],"漏":["漏れが不安"],"はがれ":["漏れが不安","ストーマケア方法"],"剥":["漏れが不安","ストーマケア方法"],"風呂":["お風呂・温泉に入りたい"],"温泉":["お風呂・温泉に入りたい"],"旅":["外出・旅行のコツ"],"外出":["外出・旅行のコツ"],"仕事":["運動・仕事への復帰"],"運動":["運動・仕事への復帰"],"食":["食事で気をつけること"],"服":["衣服・おしゃれ"],"買":["装具や用品の購入・管理"],"値段":["装具や用品の購入・管理","給付券・制度"],"お金":["給付券・制度","装具や用品の購入・管理"],"給付":["給付券・制度"],"災害":["災害時の備え・対応"],"地震":["災害時の備え・対応"],"不安":["オストメイトの交流や相談先","漏れが不安"],"相談":["オストメイトの交流や相談先"],"尿":["蓄尿袋を使う時の注意点"],"夜":["蓄尿袋を使う時の注意点","日常生活のコツ"],"寝":["蓄尿袋を使う時の注意点","日常生活のコツ"]};
+    function nearWorries(text){
+      var score={}, t=norm(text), g=grams(text), gi={}; for(var i=0;i<g.length;i++) gi[g[i]]=1;
+      for(var k in HINT){ if(t.indexOf(norm(k))>=0){ for(var j=0;j<HINT[k].length;j++) score[HINT[k][j]]=(score[HINT[k][j]]||0)+(10-3*j); } }
+      for(var e=0;e<KB.length;e++){ var en=KB[e]; if(!en.worry) continue; var eg=grams(en.q+' '+(en.kw||[]).join(' ')); var hit=0; for(var x=0;x<eg.length;x++){ if(gi[eg[x]]) hit++; } if(hit) score[en.worry]=(score[en.worry]||0)+hit; }
+      var names=[]; for(var w=0;w<WORRY.length;w++){ var nm=WORRY[w][0]; if(score[nm]) names.push([score[nm],w]); }
+      names.sort(function(a,b){ return b[0]-a[0]; });
+      var out=[]; for(var q=0;q<names.length && out.length<3;q++) out.push(names[q][1]);
+      if(!out.length){ out=[1,7,5]; } // 迷ったら: ストーマケア方法／皮膚のかゆみ、トラブル／装具や用品について知りたい
+      return out;
+    }
+    function clarifyHtml(text){
+      var idx=nearWorries(text), b='';
+      for(var i=0;i<idx.length;i++){ var m=WORRY[idx[i]]; b+='<a class="act" href="#" onclick="chatPickWorry('+idx[i]+',\''+esc(text).replace(/'/g,'&#39;')+'\');return false;">'+window.ssIcon(m[1],14)+' '+esc(m[0])+'</a>'; }
+      b+='<a class="act" href="#" onclick="chatOpenWorryList();return false;">'+window.ssIcon('list-checks',14)+' お悩み一覧から探す</a>';
+      return 'そうなのですね。もう少し教えてください。<br>「'+esc(text)+'」は、次のどれに近いですか？<div class="actions">'+b+'</div>';
+    }
+    window.chatPickWorry=function(wi, orig){
+      var m=WORRY[wi]; if(!m) return; var p=String(Date.now());
+      addUser(m[0], p);
+      var items='', cnt=0;
+      for(var i=0;i<KB.length && cnt<6;i++){ var e=KB[i]; if(e.worry!==m[0]) continue; items+='<a class="act" href="#" onclick="chatChip(\''+esc(e.q).replace(/'/g,'&#39;')+'\');return false;">'+esc(e.q)+'</a>'; cnt++; }
+      items+='<a class="act" href="#" onclick="chatOpenWorryList('+wi+');return false;">'+window.ssIcon('list-checks',14)+' この項目をすべて見る</a>';
+      addBot('「'+esc(m[0])+'」ですね。近い質問はこちらです。当てはまるものを押してください。<div class="actions">'+items+'</div>', p);
+      window.ssLog('clarify', orig||'', m[0]);
+    };
+    window.chatOpenWorryList=function(wi){ try{ closePage('page-chat'); openPage('page-onayami'); if(typeof wi==='number' && typeof openWorry==='function') openWorry(wi); }catch(e){} return false; };
+
     function reply(text,p){
       if(isDanger(text)){ addBot('気になる症状は、ここでの自己判断は避けてください。<b>早めに医療機関・ストーマ外来にご相談ください。</b>',p); window.ssLog('danger', text, '気になる症状は、ここでの自己判断は避けてください。早めに医療機関・ストーマ外来にご相談ください。'); return; }
       var e=findEntry(text);
       if(e){ addBot(window.ssAnswerHtml(e),p); window.ssLog('hit', text, e.a); }
-      else { addBot('うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。',p); window.ssLog('miss', text, 'うまくお答えできる情報が見つかりませんでした。お手数ですが、言葉を変えてもう一度お聞かせください。'); }
+      else { var ch=clarifyHtml(text); addBot(ch,p); window.ssLog('miss', text, '（聞き返し）'+ch.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').slice(0,300)); }
     }
     window.chatSend=function(){ var inp=el('chat-input'); if(!inp)return; var v=(inp.value||'').trim(); if(!v)return; inp.value=''; var p=String(Date.now()); addUser(v,p); setTimeout(function(){reply(v,p);},120); };
     window.chatChip=function(t){ var p=String(Date.now()); addUser(t,p); setTimeout(function(){reply(t,p);},120); };
