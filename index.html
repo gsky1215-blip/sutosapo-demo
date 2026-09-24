@@ -1359,7 +1359,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v47' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v48' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1459,12 +1459,15 @@
         var dot=0; for(var j=0;j<uq.length;j++){ var g2=uq[j]; if(e._g[g2]){ var w2=idf(g2); dot+=w2*w2; } }
         var cos=dot/(qn*e._n);
         var kwc=0; for(var x=0;x<e._kw.length;x++){ var kn=e._kw[x]; if((_KDF[kn]||99)<=8 && ut.indexOf(kn)>=0) kwc++; }
-        var eq=norm(e.q); var sub=!!(eq && (ut.indexOf(eq)>=0 || eq.indexOf(ut)>=0));
+        var eq=norm(e.q); var sub=!!(eq && ut.length>=3 && (ut.indexOf(eq)>=0 || eq.indexOf(ut)>=0));
         var sc=cos + 0.6*kwc + (sub?2:0);
         if(sc>bestScore){ bestScore=sc; best=e; bestCos=cos; bestKw=kwc; bestSub=sub; }
       }
-      if(bestSub || bestKw>=1) return best;
-      return bestCos>=0.3 ? best : null;
+      // 弱い一致で答えを返さない。迷ったら聞き返しに回す（医療に隣り合う内容のため）
+      if(bestSub) return best;
+      if(bestKw>=2) return best;
+      if(bestKw>=1 && bestCos>=0.12) return best;
+      return bestCos>=0.45 ? best : null;
     }
     function isDanger(t){ for(var i=0;i<DANGER.length;i++){ if(t.indexOf(DANGER[i])>=0) return true; } return false; }
     // ===== 該当なしのときの聞き返し（AIなし・定型） =====
