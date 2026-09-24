@@ -236,6 +236,16 @@
   .vmodal-frame{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
   .vmodal-frame iframe{ width:min(100vw, 177.78vh); height:min(56.25vw, 100vh); border:0; display:block; }
   .vmodal-x{ position:absolute; top:14px; right:14px; z-index:61; width:38px; height:38px; border-radius:50%; border:0; background:rgba(255,255,255,.92); color:#1a2830; font-size:17px; font-weight:700; cursor:pointer; }
+  .vnext{ position:absolute; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:rgba(8,18,24,.9); color:#fff; text-align:center; padding:24px; }
+  .vnext.on{ display:flex; }
+  .vnext-in{ max-width:340px; }
+  .vnext-lead{ font-size:12px; letter-spacing:.04em; opacity:.75; margin-bottom:7px; }
+  .vnext-title{ font-family:var(--font-display); font-size:16px; font-weight:800; line-height:1.55; margin-bottom:18px; }
+  .vnext-go{ display:inline-flex; align-items:center; gap:8px; background:var(--teal-deep); color:#fff; border:0; border-radius:999px; padding:13px 24px; font-size:15px; font-weight:800; cursor:pointer; font-family:var(--font-display); }
+  .vnext-go:active{ transform:scale(.97); }
+  .vnext-sub{ margin-top:16px; display:flex; gap:9px; justify-content:center; }
+  .vnext-sub button{ background:none; border:1px solid rgba(255,255,255,.45); color:#fff; border-radius:999px; padding:8px 15px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:var(--font-display); }
+
   /* ===== デジタルブック（サポートブック） ===== */
   #page-book{ display:flex; flex-direction:column; padding-bottom:calc(64px + env(safe-area-inset-bottom,0)); background:#e9edf0; }
   .book-track{
@@ -1005,6 +1015,7 @@
     <div class="vmodal" id="vmodal" aria-hidden="true">
       <button class="vmodal-x" onclick="closeVid()" aria-label="閉じる">✕</button>
       <div class="vmodal-frame" id="vmodal-frame"></div>
+      <div class="vnext" id="vnext" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -1348,7 +1359,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v45' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v47' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1506,6 +1517,34 @@
       }
     };
     function renderChips(){ var c=el('chat-chips'); if(!c)return; c.innerHTML=''; CHIPS.forEach(function(q){ var b=document.createElement('button'); b.className='chat-chip'; b.textContent=q; b.onclick=function(){chatChip(q);}; c.appendChild(b); }); }
+    // ===== マスターシートの最新を取り込む =====
+    // 受け口（Apps Script）から最新のQ&Aを受け取り、内蔵のものと差し替える。
+    // 動画・チラシ・ストアの紐付けは質問文で照合して引き継ぐ。
+    window.ssApplyKB = function(arr){
+      if(!arr || !arr.length) return false;
+      var old={}; for(var i=0;i<KB.length;i++){ old[KB[i].q]=KB[i]; }
+      for(var j=0;j<arr.length;j++){
+        var o=old[arr[j].q]; if(!o) continue;
+        if(o.videos) arr[j].videos=o.videos;
+        if(o.flyer)  arr[j].flyer=o.flyer;
+        if(o.store)  arr[j].store=o.store;
+      }
+      KB = arr; window.SS_KB = arr;
+      _DF=null; _N=KB.length; _KDF={};
+      try{ if(el('worry-grid')) window.renderWorry(); }catch(e){}
+      return true;
+    };
+    (function(){
+      var u = window.SS_LOG_URL; if(!u) return;
+      try{
+        fetch(u + (u.indexOf('?')<0?'?':'&') + 'action=kb', {cache:'no-store'})
+          .then(function(r){ return r.json(); })
+          .then(function(a){ window.ssApplyKB(a); })
+          .catch(function(){});
+      }catch(e){}
+    })();
+
+
     function initChat(){ if(!el('chat-log'))return; if(el('chat-log').dataset.init)return; el('chat-log').dataset.init='1'; var saved=histLoad(); if(saved.length){ restoring=true; for(var i=0;i<saved.length;i++){ if(saved[i].r==='u') addUser(saved[i].h,saved[i].p); else addBot(saved[i].h,saved[i].p); } restoring=false; renderChips(); return; } addBot('こんにちは。ストーマのことなら、まずここで聞いてみてください。装具・スキンケア・におい・お風呂・購入など、気になることをどうぞ。下のボタンから選ぶこともできます。'); renderChips(); }
 
     // ===== お悩みから探す =====
@@ -1898,14 +1937,64 @@
       list.innerHTML='<div class="vsec-label">検索結果（'+hits.length+'件）</div>'+_vgrid(hits, hits.map(function(id){return _vcache[id];}));
     });
   }
+  // 動画が最後まで再生されたら「次の動画へ」を出す
+  var _vcur = null;
+  function _vnextId(id){
+    var lists = [VIDS[__vsec]||[], VIDS.in, VIDS.out];
+    for(var i=0;i<lists.length;i++){
+      var L = lists[i] || [], k = L.indexOf(id);
+      if(k < 0) continue;
+      return (k+1 < L.length) ? L[k+1] : null;
+    }
+    return null;
+  }
+  function _vnextHide(){ var ov=document.getElementById('vnext'); if(ov){ ov.classList.remove('on'); ov.innerHTML=''; } }
+  function _vnextShow(){
+    var m=document.getElementById('vmodal'); if(!m || !m.classList.contains('on')) return;
+    var ov=document.getElementById('vnext'); if(!ov) return;
+    var nid=_vnextId(_vcur);
+    function paint(title){
+      var h='<div class="vnext-in">';
+      if(nid){
+        h += '<div class="vnext-lead">次の動画</div>';
+        h += '<div class="vnext-title">'+_vtitle(title||'')+'</div>';
+        h += '<button class="vnext-go" onclick="vnextGo()">'+_VPLAY+' 次を見る</button>';
+      } else {
+        h += '<div class="vnext-lead">最後の動画です</div>';
+        h += '<div class="vnext-title">お疲れさまでした</div>';
+      }
+      h += '<div class="vnext-sub"><button onclick="vnextReplay()">もう一度見る</button><button onclick="closeVid()">一覧に戻る</button></div>';
+      ov.innerHTML = h + '</div>';
+      ov.classList.add('on');
+    }
+    if(nid){ _voembed(nid).then(function(mm){ paint(mm && mm.title); }); } else { paint(''); }
+  }
+  window.vnextGo = function(){ var nid=_vnextId(_vcur); _vnextHide(); if(nid) playVid(nid); };
+  window.vnextReplay = function(){ var id=_vcur; _vnextHide(); if(id) playVid(id); };
+  window.addEventListener('message', function(e){
+    if(String(e.origin||'').indexOf('player.vimeo.com') < 0) return;
+    var d; try{ d = (typeof e.data === 'string') ? JSON.parse(e.data) : e.data; }catch(err){ return; }
+    if(!d) return;
+    if(d.event === 'ready'){
+      try{ var fr=document.getElementById('vmodal-iframe'); if(fr) fr.contentWindow.postMessage(JSON.stringify({method:'addEventListener', value:'ended'}), 'https://player.vimeo.com'); }catch(err2){}
+      return;
+    }
+    if(d.event === 'ended') _vnextShow();
+  });
   function playVid(id){
     var m=document.getElementById('vmodal'), f=document.getElementById('vmodal-frame');
-    f.innerHTML = '<iframe src="https://player.vimeo.com/video/'+id+'?autoplay=1&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen frameborder="0"></iframe>';
+    _vcur = id; _vnextHide();
+    f.innerHTML = '<iframe id="vmodal-iframe" src="https://player.vimeo.com/video/'+id+'?api=1&player_id=vmodal-iframe&autoplay=1&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen frameborder="0"></iframe>';
+    var fr=document.getElementById('vmodal-iframe');
+    if(fr) fr.addEventListener('load', function(){
+      try{ fr.contentWindow.postMessage(JSON.stringify({method:'addEventListener', value:'ended'}), 'https://player.vimeo.com'); }catch(err){}
+    });
     if(m.parentElement !== document.body) document.body.appendChild(m); // .pageのtransformから外して全画面化
     m.classList.add('on'); var pv=document.getElementById('page-video'); if(pv) pv.classList.add('modal-open');
   }
   function closeVid(){
     var m=document.getElementById('vmodal'), f=document.getElementById('vmodal-frame');
+    _vcur=null; _vnextHide();
     if(m) m.classList.remove('on'); var pv=document.getElementById('page-video'); if(pv) pv.classList.remove('modal-open');
     if(f) f.innerHTML='';
   }
