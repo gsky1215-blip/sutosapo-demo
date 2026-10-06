@@ -1381,7 +1381,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v50' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v51' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1635,9 +1635,14 @@
         <span class="st">プッシュ通知<span>新しいお知らせを受け取る</span></span>
         <span class="sg"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
       </button>
-      <button class="set-item" onclick="closePage('page-settings');openPage('page-faq');return false;">
-        <span class="si" style="background:#e6f4e9;color:#3a9d63;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></span>
-        <span class="st">よくある質問<span>はじめての方へ</span></span>
+      <button class="set-item" onclick="closePage('page-settings');openPage('page-about');return false;">
+        <span class="si" style="background:#e4f3fb;color:#0d8ab0;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+        <span class="st">ストサポについて<span>このアプリが目指していること</span></span>
+        <span class="sg"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>
+      <button class="set-item" onclick="closePage('page-settings');openPage('page-howto');return false;">
+        <span class="si" style="background:#e6f4e9;color:#3a9d63;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+        <span class="st">使い方<span>画面の見かたとご利用上の注意</span></span>
         <span class="sg"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
       </button>
       <button class="set-item" onclick="closePage('page-settings');openPage('page-privacy');return false;">
@@ -1648,6 +1653,116 @@
     </div>
     <p class="set-note">ご利用にあたってのご質問は、お求めの販売店またはストーマ外来へご相談ください。医療的な判断が必要なときは、必ず医療機関にご相談ください。</p>
   </div>
+
+  <!-- ===== サブページ: ストサポについて ===== -->
+  <style>
+  #page-about{ background:var(--base); }
+  .doc{ margin:6px 18px 28px; font-size:13.5px; line-height:2.0; color:#3e5a66; }
+  .doc .lead2{ font-family:var(--font-display); font-size:16px; font-weight:800; color:var(--teal-deep); line-height:1.7; margin:4px 0 14px; }
+  .doc h3{ font-family:var(--font-display); font-size:14.5px; color:var(--blue-ink); margin:24px 0 8px; padding-left:11px; border-left:4px solid var(--teal); }
+  .doc p{ margin:0 0 12px; }
+  .doc ul{ margin:0 0 12px; padding-left:20px; }
+  .doc li{ margin-bottom:7px; }
+  .doc .closing{ margin-top:22px; padding:16px 18px; background:#fff; border:1px solid var(--line); border-radius:var(--r-md); font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--teal-deep); text-align:center; line-height:1.8; box-shadow:var(--shadow-sm); }
+  .doc .warn-box{ margin:14px 0; padding:13px 15px; background:#fdeede; border:1px solid #f3dfc6; border-radius:12px; color:#9a5a12; font-size:12.5px; line-height:1.85; }
+  </style>
+  <div class="page" id="page-about" aria-hidden="true">
+    <div class="page-head">
+      <button class="back" onclick="goBackOne();return false;" aria-label="戻る">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <h2>ストサポについて</h2>
+    </div>
+    <div class="doc">
+      <p class="lead2">不安な入院生活から、<br>安心できる毎日へ</p>
+
+      <p>ストーマ造設を迎えるとき、多くの方がさまざまな不安を抱えます。</p>
+      <p>「これからどんな生活になるのだろう」「退院してから自分で管理できるだろうか」「家族として何を支えたらいいのだろう」</p>
+      <p>ストサポは、そんな患者様、ご家族、そして医療従事者の皆様に寄り添うために生まれました。</p>
+
+      <h3>ストサポとは</h3>
+      <p>ストサポは「ストーマライフトータルサポート」を略した造語です。手術直後の不安な時期から、退院後の自宅療養、そしてその先の日常生活まで、オストメイトの皆様が安心して生活できる環境を継続的にお届けすることを目指しています。</p>
+      <p>サポートセット、サポートブック、ストサポWEBアプリ、オンラインストア、PB商品などのコンテンツと、WOCナースやストーマライフアドバイザーによる人的サポートを組み合わせ、「術直後から退院後も続く安心」をお届けしています。</p>
+
+      <h3>動画で学ぶストーマケア</h3>
+      <p>ストサポの大きな特長のひとつが動画コンテンツです。患者様やご家族はもちろん、病棟で支援される看護師の皆様も利用できます。</p>
+      <p>装具交換の方法をアニメ化した動画で分かりやすく解説し、ご自身のスマートフォンやパソコンから、いつでも、どこでも視聴できます。</p>
+      <p>動画は約1分程度のコンテンツを12本ご用意しており、苦手な手順だけを何度でも繰り返し見ることができます。</p>
+      <p>「教わったけれど忘れてしまった」を「いつでも確認できる安心」へ。それが私たちの願いです。</p>
+
+      <h3>ロゴに込めた想い</h3>
+      <p>ストサポのロゴには私たちの願いが込められています。中央の顔のデザインは安心感と親しみやすさを表現しています。左側の四角は病院、右側の三角は自宅を象徴しています。</p>
+      <p>入院中から退院後の生活へ。そしてその先の日常生活まで。患者様が安心して歩んでいけるよう、途切れることのないサポートを提供したいという想いをデザインに込めました。</p>
+
+      <h3>私たちが届けたいもの</h3>
+      <p>ストサポが届けたいのは製品やサービスだけではありません。それは「あなたは一人ではない」という安心感です。</p>
+
+      <div class="closing">術直後から退院後も続く安心を。</div>
+    </div>
+  </div>
+
+  <!-- ===== サブページ: 使い方 ===== -->
+  <style>
+  #page-howto{ background:var(--base); }
+  .howto-step{ display:flex; gap:12px; margin-bottom:14px; }
+  .howto-step .num{ flex:none; width:26px; height:26px; border-radius:50%; background:var(--teal-deep); color:#fff; font-family:var(--font-display); font-weight:800; font-size:13px; display:grid; place-items:center; margin-top:2px; }
+  .howto-step .tx{ flex:1; min-width:0; }
+  .howto-step .tx b{ display:block; font-family:var(--font-display); font-size:14px; color:var(--blue-ink); margin-bottom:3px; }
+  .howto-step .tx span{ font-size:13px; line-height:1.9; color:#4a6774; }
+  </style>
+  <div class="page" id="page-howto" aria-hidden="true">
+    <div class="page-head">
+      <button class="back" onclick="goBackOne();return false;" aria-label="戻る">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <h2>使い方</h2>
+    </div>
+    <div class="doc">
+      <p>ストサポは、スマートフォンでも、パソコンでもご覧いただけます。アプリのダウンロードや会員登録は必要ありません。</p>
+
+      <h3>ホーム画面からできること</h3>
+      <div class="howto-step"><span class="num">1</span><span class="tx"><b>動画を観る</b><span>装具交換の手順を、1本約1分の動画で見られます。苦手な手順だけを選んで、何度でもご覧ください。</span></span></div>
+      <div class="howto-step"><span class="num">2</span><span class="tx"><b>サポートブック</b><span>冊子と同じ内容を画面でご覧いただけます。左右にめくってお読みください。文字が小さいときは、画面を指で広げると大きくなります。</span></span></div>
+      <div class="howto-step"><span class="num">3</span><span class="tx"><b>用品を知る</b><span>ストーマ装具とケア用品を種類ごとにご案内します。サポートブックの該当ページや、オンラインストアの商品ページへ移動できます。</span></span></div>
+      <div class="howto-step"><span class="num">4</span><span class="tx"><b>チャットに相談</b><span>気になることを入力すると、よくあるご質問の中からお答えします。言葉が見つからないときは、下に出るボタンからお選びください。</span></span></div>
+      <div class="howto-step"><span class="num">5</span><span class="tx"><b>お悩みから知る</b><span>「漏れが不安」「においが気になる」など、困りごとから探せます。項目を選ぶと、関連するご質問と回答が並びます。</span></span></div>
+      <div class="howto-step"><span class="num">6</span><span class="tx"><b>福祉制度について</b><span>日常生活用具給付券の申請と使い方をご案内します。</span></span></div>
+
+      <h3>画面の下のタブ</h3>
+      <p>画面の下に、ホーム・動画・相談・用品・メニューのタブがあります。どの画面からでも、ここから移動できます。「メニュー」には、このアプリのすべてのページが並んでいます。</p>
+
+      <h3>チャットの履歴について</h3>
+      <p>チャットでのやりとりは、次に開いたときに続きからご覧いただけるよう、お使いの端末の中に残ります。各回答の右下のごみ箱ボタンを押すと、その質問と回答を消すことができます。ご家族と共有の端末をお使いの場合は、こちらでお消しください。</p>
+
+      <h3>ホーム画面に置いておくと便利です</h3>
+      <p>スマートフォンのブラウザでこのページを開き、共有のボタンから「ホーム画面に追加」を選ぶと、アプリのように開けるようになります。</p>
+
+      <h3>ご利用上の注意</h3>
+      <div class="warn-box">本アプリの内容は、一般的な情報の提供を目的としたものです。診断や治療にかわるものではありません。症状やケアについてご不安があるときは、ストーマ外来やかかりつけの医療機関にご相談ください。</div>
+      <ul>
+        <li>お体の状態やストーマの種類によって、適したケアの方法は異なります。実際のケアは、医療者の指導に従ってください。</li>
+        <li>出血、強い痛み、発熱など、気になる症状があるときは、自己判断をなさらず、すぐに医療機関にご相談ください。</li>
+        <li>掲載している製品の情報や給付制度の内容は、変更になる場合があります。最新の情報は、販売店またはお住まいの市区町村にご確認ください。</li>
+        <li>チャットにご入力いただいた内容は、回答を改善するために記録します。お名前やご連絡先など、ご自身を特定できる情報は入力なさらないでください。</li>
+      </ul>
+
+      <h3>禁止事項</h3>
+      <p>本アプリをご利用になるにあたり、次の行為はご遠慮ください。</p>
+      <ul>
+        <li>掲載されている文章、画像、動画を、権利者の許可なく複製、転載、配布、販売すること</li>
+        <li>内容を改変して公開すること</li>
+        <li>営利を目的として利用すること</li>
+        <li>他の方になりすまして利用すること、または他の方に不利益を与える行為</li>
+        <li>本アプリの運営を妨げる行為、不正にアクセスする行為</li>
+        <li>法令または公序良俗に反する行為</li>
+      </ul>
+      <p>本アプリに掲載されている内容の著作権は、株式会社エム・ピー・アイ、または正当な権利を有する第三者に帰属します。</p>
+
+      <h3>お問い合わせ</h3>
+      <p>本アプリについてのお問い合わせは、株式会社エム・ピー・アイ オストミー事業部までご連絡ください。</p>
+    </div>
+  </div>
+
 
   <!-- ===== サブページ: プライバシーポリシー ===== -->
   <style>
