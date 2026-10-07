@@ -925,8 +925,6 @@
   <!-- フッター -->
   <div class="foot">
     <div class="foot-links">
-      <a href="#" onclick="openPage('page-faq');return false;">よくある質問</a>
-      <span>・</span>
       <a href="#" onclick="openPage('page-privacy');return false;">プライバシーポリシー</a>
       <span>・</span>
       <a href="https://mpi-store.com/" target="_blank" rel="noopener">オンラインストア</a>
@@ -1381,7 +1379,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v51' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v52' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1682,12 +1680,12 @@
 
       <h3>ストサポとは</h3>
       <p>ストサポは「ストーマライフトータルサポート」を略した造語です。手術直後の不安な時期から、退院後の自宅療養、そしてその先の日常生活まで、オストメイトの皆様が安心して生活できる環境を継続的にお届けすることを目指しています。</p>
-      <p>サポートセット、サポートブック、ストサポWEBアプリ、オンラインストア、PB商品などのコンテンツと、WOCナースやストーマライフアドバイザーによる人的サポートを組み合わせ、「術直後から退院後も続く安心」をお届けしています。</p>
+      <p>サポートセット、サポートブック、ストサポWEBアプリ、オンラインストア、オリジナル商品などのコンテンツと、WOCナースやストーマライフアドバイザー®による人的サポートを組み合わせ、「術直後から退院後も続く安心」をお届けしています。</p>
 
       <h3>動画で学ぶストーマケア</h3>
       <p>ストサポの大きな特長のひとつが動画コンテンツです。患者様やご家族はもちろん、病棟で支援される看護師の皆様も利用できます。</p>
       <p>装具交換の方法をアニメ化した動画で分かりやすく解説し、ご自身のスマートフォンやパソコンから、いつでも、どこでも視聴できます。</p>
-      <p>動画は約1分程度のコンテンツを12本ご用意しており、苦手な手順だけを何度でも繰り返し見ることができます。</p>
+      <p>コンテンツを手順ごとに用意しており、苦手な手順だけを何度でも繰り返し見ることができます。</p>
       <p>「教わったけれど忘れてしまった」を「いつでも確認できる安心」へ。それが私たちの願いです。</p>
 
       <h3>ロゴに込めた想い</h3>
@@ -1934,11 +1932,6 @@
           <span class="mi-tx"><b>お悩みから知る</b><span>困りごとから答えを探す</span></span>
           <span class="mi-ar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
         </button>
-        <button class="menu-item" onclick="return menuGo('page-faq');">
-          <span class="mi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.8-.9 1.4v.6"/><path d="M12 17h.01"/></svg></span>
-          <span class="mi-tx"><b>よくある質問</b><span>暮らしや費用の疑問に答えます</span></span>
-          <span class="mi-ar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
-        </button>
       </div>
     </div>
 
@@ -1953,11 +1946,6 @@
         <button class="menu-item" onclick="return menuGo('page-fukushi');">
           <span class="mi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
           <span class="mi-tx"><b>福祉制度について</b><span>給付制度・助成のこと</span></span>
-          <span class="mi-ar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
-        </button>
-        <button class="menu-item" onclick="return menuGo('page-mypage');">
-          <span class="mi-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span>
-          <span class="mi-tx"><b>マイページ</b><span>登録情報と給付券のご案内</span></span>
           <span class="mi-ar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
         </button>
       </div>
