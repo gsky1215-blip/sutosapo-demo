@@ -927,6 +927,8 @@
     <div class="foot-links">
       <a href="#" onclick="openPage('page-privacy');return false;">プライバシーポリシー</a>
       <span>・</span>
+      <a href="#" onclick="openPage('page-about');return false;">ストサポについて</a>
+      <span>・</span>
       <a href="https://mpi-store.com/" target="_blank" rel="noopener">オンラインストア</a>
     </div>
     <div class="est">Established 1983 ・ Over 40 Years</div>
@@ -1379,7 +1381,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v52' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v53' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1649,7 +1651,7 @@
         <span class="sg"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
       </button>
     </div>
-    <p class="set-note">ご利用にあたってのご質問は、お求めの販売店またはストーマ外来へご相談ください。医療的な判断が必要なときは、必ず医療機関にご相談ください。</p>
+    <p class="set-note">医療的な判断が必要なときは、必ず医療機関にご相談ください。</p>
   </div>
 
   <!-- ===== サブページ: ストサポについて ===== -->
@@ -1685,7 +1687,7 @@
       <h3>動画で学ぶストーマケア</h3>
       <p>ストサポの大きな特長のひとつが動画コンテンツです。患者様やご家族はもちろん、病棟で支援される看護師の皆様も利用できます。</p>
       <p>装具交換の方法をアニメ化した動画で分かりやすく解説し、ご自身のスマートフォンやパソコンから、いつでも、どこでも視聴できます。</p>
-      <p>コンテンツを手順ごとに用意しており、苦手な手順だけを何度でも繰り返し見ることができます。</p>
+      <p>動画は約1分程度のコンテンツを手順ごとに用意しており、苦手な手順だけを何度でも繰り返し見ることができます。</p>
       <p>「教わったけれど忘れてしまった」を「いつでも確認できる安心」へ。それが私たちの願いです。</p>
 
       <h3>ロゴに込めた想い</h3>
