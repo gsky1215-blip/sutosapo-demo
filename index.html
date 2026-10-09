@@ -501,6 +501,15 @@
   .flyer-scroll img{ width:100%; max-width:640px; height:auto; border-radius:8px; box-shadow:0 6px 24px rgba(0,0,0,.4); margin:0 auto 12px; display:block; }
   .flyer-open{ display:inline-block; margin:4px auto 0; color:#dff1f8; font-size:12.5px; text-decoration:underline; }
   .flyer-x{ position:absolute; top:12px; right:12px; z-index:2; width:38px; height:38px; border-radius:50%; border:0; background:rgba(255,255,255,.92); color:#1a2830; font-size:17px; font-weight:700; cursor:pointer; }
+  /* Medical Notice Card モーダル（画像で全画面表示・スマホに保存） */
+  .card-modal{ position:fixed; inset:0; z-index:9999; background:rgba(15,32,40,.94); display:none; }
+  .card-modal.on{ display:block; }
+  .card-scroll{ position:absolute; inset:0; overflow:auto; -webkit-overflow-scrolling:touch; padding:calc(72px + env(safe-area-inset-top,0px)) 14px 34px; text-align:center; }
+  .card-scroll img{ width:100%; max-width:640px; height:auto; border-radius:8px; box-shadow:0 6px 24px rgba(0,0,0,.4); margin:0 auto 18px; display:block; background:#fff; -webkit-touch-callout:default; }
+  .card-save{ display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 28px; border-radius:999px; border:0; background:#16a6cc; color:#fff; font-size:16px; font-weight:800; cursor:pointer; font-family:var(--font-display); box-shadow:0 2px 10px rgba(0,0,0,.3); }
+  .card-note{ margin:12px auto 0; max-width:640px; color:#dff1f8; font-size:13px; line-height:1.7; }
+  .card-x{ position:absolute; top:calc(12px + env(safe-area-inset-top,0px)); left:calc(12px + env(safe-area-inset-left,0px)); z-index:2; height:44px; padding:0 18px 0 14px; border-radius:999px; border:0; background:rgba(255,255,255,.95); color:#1a2830; font-size:15px; font-weight:800; display:inline-flex; align-items:center; gap:7px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,.35); font-family:var(--font-display); }
+  .card-x .x{ font-size:17px; line-height:1; }
 
   /* 答えページ */
   .answer-hero{
@@ -1053,6 +1062,16 @@
     </div>
   </div>
 
+  <!-- Medical Notice Card モーダル -->
+  <div class="card-modal" id="card-modal" aria-hidden="true">
+    <button class="card-x" onclick="closeCard()" aria-label="閉じる"><span class="x">✕</span>閉じる</button>
+    <div class="card-scroll">
+      <img data-src="assets/medical-notice-card.png" alt="Medical Notice Card（医療に関するお知らせ）">
+      <button class="card-save" onclick="saveCard()">スマホに保存する</button>
+      <p class="card-note">画像を長押ししても保存できます。</p>
+    </div>
+  </div>
+
   <!-- ===== サブページ: 商品を確認する ===== -->
   <div class="page" id="page-shop" aria-hidden="true">
     <div class="page-head">
@@ -1383,7 +1402,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v54' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v55' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1433,18 +1452,17 @@
     function el(id){ return document.getElementById(id); }
 
     // ===== 共有：回答HTML（チャット／お悩み一覧の両方で使用） =====
-    var CARD_PDF = 'assets/medical-notice-card.pdf';
     window.ssAnswerHtml = function(entry){
       var h = esc(entry.a).replace(/\n/g,'<br>');
       var hasCard = /Medical Notice Card/i.test(entry.a||'');
-      if(hasCard){ h = h.replace(/※?「Medical Notice Card」をダウンロード/, function(m){ return '<a class="card-dl" href="'+CARD_PDF+'" target="_blank" rel="noopener" download="Medical_Notice_Card.pdf">'+m+'</a>'; }); }
+      if(hasCard){ h = h.replace(/※?「Medical Notice Card」をダウンロード/, function(m){ return '<a class="card-dl" href="#" onclick="openCard();return false;">'+m+'</a>'; }); }
       if(entry.warn){ h += '<div style="margin-top:9px;padding:8px 11px;background:#fdeede;border:1px solid #f3dfc6;border-radius:10px;color:#9a5a12;font-size:12.5px;font-weight:700;line-height:1.6;">'+esc(MED)+'</div>'; }
       var acts=[];
       if(entry.book){ acts.push('<a class="act" href="#" onclick="chatOpenBook('+entry.book+');return false;">'+window.ssIcon("book-open",14)+' サポートブック P'+entry.book+' を開く</a>'); }
       if(entry.videos){ for(var i=0;i<entry.videos.length;i++){ var v=entry.videos[i]; acts.push('<a class="act video" href="#" onclick="playVid(\''+v.id+'\');return false;">'+window.ssIcon("play",14)+' 動画：'+esc(v.t)+'</a>'); } }
       if(entry.fukushi){ acts.push('<a class="act" href="#" onclick="chatOpenFukushi();return false;">'+window.ssIcon("landmark",14)+' 福祉制度について を開く</a>'); }
       if(entry.flyer){ acts.push('<a class="act flyer" href="#" onclick="openFlyer();return false;">'+window.ssIcon("file",14)+' 販売店見直しチラシを見る</a>'); }
-      if(hasCard){ acts.push('<a class="act" href="'+CARD_PDF+'" target="_blank" rel="noopener" download="Medical_Notice_Card.pdf">'+window.ssIcon("file",14)+' Medical Notice Card（PDF）</a>'); }
+      if(hasCard){ acts.push('<a class="act" href="#" onclick="openCard();return false;">'+window.ssIcon("file",14)+' Medical Notice Card を見る</a>'); }
       if(entry.store){ acts.push('<a class="act store" href="https://mpi-store.com/" target="_blank" rel="noopener">'+window.ssIcon("cart",14)+' MPIオンラインストアで見る</a>'); }
       if(acts.length) h += '<div class="actions">'+acts.join('')+'</div>';
       return h;
@@ -2260,6 +2278,31 @@
   function closeFlyer(){
     var m=document.getElementById('flyer-modal'); if(!m) return;
     m.classList.remove('on'); m.setAttribute('aria-hidden','true');
+  }
+  // Medical Notice Card（画像で全画面表示。「閉じる」で元の画面に戻る。保存はスマホの共有から）
+  var CARD_IMG='assets/medical-notice-card.png', _cardFile=null;
+  function _cardPrep(){
+    if(_cardFile) return;
+    try{ fetch(CARD_IMG).then(function(r){ return r.blob(); }).then(function(b){ try{ _cardFile=new File([b],'Medical_Notice_Card.png',{type:'image/png'}); }catch(e){} }).catch(function(){}); }catch(e){}
+  }
+  function openCard(){
+    var m=document.getElementById('card-modal'); if(!m) return false;
+    if(m.parentElement !== document.body) document.body.appendChild(m); // .pageのtransform回避
+    var img=m.querySelector('img[data-src]'); if(img){ img.src=img.getAttribute('data-src'); img.removeAttribute('data-src'); }
+    var sc=m.querySelector('.card-scroll'); if(sc) sc.scrollTop=0;
+    m.classList.add('on'); m.setAttribute('aria-hidden','false');
+    _cardPrep();
+    return false;
+  }
+  function closeCard(){
+    var m=document.getElementById('card-modal'); if(!m) return;
+    m.classList.remove('on'); m.setAttribute('aria-hidden','true');
+  }
+  function saveCard(){
+    if(_cardFile && navigator.canShare && navigator.share){
+      try{ if(navigator.canShare({files:[_cardFile]})){ navigator.share({files:[_cardFile], title:'Medical Notice Card'}).catch(function(){}); return; } }catch(e){}
+    }
+    var a=document.createElement('a'); a.href=CARD_IMG; a.download='Medical_Notice_Card.png'; document.body.appendChild(a); a.click(); setTimeout(function(){ if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
   }
   // 用品カード等から、サポートブックの該当ページ(本文P)を開く
   function openBook(p){
