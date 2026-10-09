@@ -1402,7 +1402,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v55' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v56' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -2300,8 +2300,11 @@
   }
   function saveCard(){
     if(_cardFile && navigator.canShare && navigator.share){
-      try{ if(navigator.canShare({files:[_cardFile]})){ navigator.share({files:[_cardFile], title:'Medical Notice Card'}).catch(function(){}); return; } }catch(e){}
+      try{ if(navigator.canShare({files:[_cardFile]})){ navigator.share({files:[_cardFile]}).catch(function(){}); return; } }catch(e){}
     }
+    // 共有が使えないiPhoneでは、画像のページへ飛ばさない（ホーム画面のアプリでは戻れなくなる）。長押しでの保存を案内する
+    var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+    if(ios){ var n=document.querySelector('#card-modal .card-note'); if(n){ n.textContent='カードの画像を長押しして、保存してください。'; n.style.fontWeight='800'; n.style.color='#fff'; } return; }
     var a=document.createElement('a'); a.href=CARD_IMG; a.download='Medical_Notice_Card.png'; document.body.appendChild(a); a.click(); setTimeout(function(){ if(a.parentNode) a.parentNode.removeChild(a); }, 1000);
   }
   // 用品カード等から、サポートブックの該当ページ(本文P)を開く
