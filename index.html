@@ -1402,7 +1402,7 @@
   window.ssLog = function(kind, q, a){
     try{
       var u = window.SS_LOG_URL; if(!u) return;
-      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v57' });
+      var body = JSON.stringify({ kind:String(kind||''), q:String(q||'').slice(0,300), a:String(a||'').slice(0,2000), at:new Date().toISOString(), ver:'v58' });
       fetch(u, { method:'POST', mode:'no-cors', keepalive:true, body:body });
     }catch(e){}
   };
@@ -1719,7 +1719,7 @@
       <p>入院中から退院後の生活へ。そしてその先の日常生活まで。患者様が安心して歩んでいけるよう、途切れることのないサポートを提供したいという想いをデザインに込めました。</p>
 
       <h3>私たちが届けたいもの</h3>
-      <p>ストサポが届けたいのは製品やサービスだけではありません。それは「あなたは一人ではない」という安心感です。</p>
+      <p>ストサポが届けたいのは製品やサービスだけではありません。それは「あなたは一人ではない」という安心感です。困ったときも、確認したいときも、安心したいときも、いつでもストサポをご活用ください。</p>
 
       <div class="closing">術直後から退院後も続く安心を。</div>
     </div>
